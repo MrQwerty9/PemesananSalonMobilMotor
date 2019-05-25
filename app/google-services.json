@@ -1,0 +1,48 @@
+{
+  "project_info": {
+    "project_number": "424839747239",
+    "firebase_url": "https://pemesanansalonmobilmotor.firebaseio.com",
+    "project_id": "pemesanansalonmobilmotor",
+    "storage_bucket": "pemesanansalonmobilmotor.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:424839747239:android:668545a2bf2d05b4",
+        "android_client_info": {
+          "package_name": "com.sstudio.pemesanansalonmobilmotor"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "424839747239-721lj4l91gjo9lm0g30gjehhfeashnlf.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.sstudio.pemesanansalonmobilmotor",
+            "certificate_hash": "9bb47dd2aaf5402200c9e8cd72481013249ccd83"
+          }
+        },
+        {
+          "client_id": "424839747239-t9ilrl7r6epkve3m0ge2ekuo6h0p1b7d.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDbN6nz5z0esH7zxiZ_Abn4hhl7Jk7XqDg"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "424839747239-t9ilrl7r6epkve3m0ge2ekuo6h0p1b7d.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
