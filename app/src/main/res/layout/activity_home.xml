@@ -7,9 +7,22 @@
         android:layout_height="match_parent"
         tools:context=".HomeActivity">
     <FrameLayout
+            android:id="@+id/fl_home"
             android:layout_width="match_parent"
             android:layout_height="match_parent">
 
     </FrameLayout>
+
+    <com.google.android.material.bottomnavigation.BottomNavigationView
+            android:id="@+id/bn_home"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_alignParentBottom="true"
+            android:background="@color/button1"
+            app:itemIconTint="@color/putih"
+            app:itemTextColor="@color/putih"
+            app:menu="@menu/home_menu">
+
+    </com.google.android.material.bottomnavigation.BottomNavigationView>
 
 </RelativeLayout>

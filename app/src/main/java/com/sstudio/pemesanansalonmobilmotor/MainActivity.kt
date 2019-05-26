@@ -19,7 +19,7 @@ import java.security.MessageDigest
 
 class MainActivity : AppCompatActivity() {
 
-    private val APP_REQUEST_CODE: Int = 999
+    private val APP_REQUEST_CODE: Int = 9991
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -33,25 +33,20 @@ class MainActivity : AppCompatActivity() {
             finish()
         }else{
             setContentView(R.layout.activity_main)
+            btn_login.setOnClickListener {
+                val intent = Intent(this, AccountKitActivity::class.java)
+                val configurationBuilder =
+                    AccountKitConfiguration.AccountKitConfigurationBuilder(LoginType.PHONE, AccountKitActivity.ResponseType.TOKEN)
+                intent.putExtra(AccountKitActivity.ACCOUNT_KIT_ACTIVITY_CONFIGURATION,
+                    configurationBuilder.build())
+                startActivityForResult(intent, APP_REQUEST_CODE)
+            }
+            tv_lewati.setOnClickListener {
+                val intent = Intent(this, HomeActivity::class.java)
+                intent.putExtra(Common.IS_LOGIN, false)
+                startActivity(intent)
+            }
         }
-
-
-        btn_login.setOnClickListener {
-            val intent = Intent(this, AccountKitActivity::class.java)
-            val configurationBuilder =
-                AccountKitConfiguration.AccountKitConfigurationBuilder(LoginType.PHONE, AccountKitActivity.ResponseType.TOKEN)
-            intent.putExtra(AccountKitActivity.ACCOUNT_KIT_ACTIVITY_CONFIGURATION,
-                configurationBuilder.build())
-            startActivityForResult(intent, APP_REQUEST_CODE)
-        }
-
-        tv_lewati.setOnClickListener {
-            val intent = Intent(this, HomeActivity::class.java)
-            intent.putExtra(Common.IS_LOGIN, false)
-            startActivity(intent)
-        }
-
-
     }
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         super.onActivityResult(requestCode, resultCode, data)
