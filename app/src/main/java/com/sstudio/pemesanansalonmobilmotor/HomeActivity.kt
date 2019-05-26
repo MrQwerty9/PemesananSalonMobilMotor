@@ -1,19 +1,16 @@
 package com.sstudio.pemesanansalonmobilmotor
 
 import android.app.AlertDialog
-import android.media.MediaPlayer
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.view.MenuItem
-import android.widget.Button
 import android.widget.Toast
 import androidx.fragment.app.Fragment
+import androidx.fragment.app.FragmentManager
 import com.facebook.accountkit.Account
 import com.facebook.accountkit.AccountKit
 import com.facebook.accountkit.AccountKitCallback
 import com.facebook.accountkit.AccountKitError
-import com.google.android.gms.tasks.OnCompleteListener
-import com.google.android.gms.tasks.Task
 import com.google.android.material.bottomnavigation.BottomNavigationView
 import com.sstudio.pemesanansalonmobilmotor.common.Common
 import com.google.android.material.bottomsheet.BottomSheetDialog
@@ -26,7 +23,6 @@ import com.sstudio.pemesanansalonmobilmotor.Fragments.ShoppingFragment
 import com.sstudio.pemesanansalonmobilmotor.Model.User
 import dmax.dialog.SpotsDialog
 import kotlinx.android.synthetic.main.activity_home.*
-import kotlinx.android.synthetic.main.layout_update_information.*
 import kotlinx.android.synthetic.main.layout_update_information.view.*
 
 class HomeActivity : AppCompatActivity() {
@@ -34,6 +30,8 @@ class HomeActivity : AppCompatActivity() {
     lateinit var userRef: CollectionReference
     lateinit var bottomSheetDialog: BottomSheetDialog
     lateinit var dialog: AlertDialog
+    lateinit var fm: FragmentManager
+    val homeFragment = HomeFragment()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -41,6 +39,13 @@ class HomeActivity : AppCompatActivity() {
 
         userRef = FirebaseFirestore.getInstance().collection("User")
         dialog = SpotsDialog.Builder().setContext(this).setCancelable(false).build()
+        fm = supportFragmentManager
+
+        if (savedInstanceState != null){
+            fm.beginTransaction()
+                .add(R.id.fl_home, homeFragment)
+                .commit();
+        }
 
         if (intent != null){
             val isLogin: Boolean = intent.getBooleanExtra(Common.IS_LOGIN, false)
@@ -57,6 +62,10 @@ class HomeActivity : AppCompatActivity() {
                                         val userSnapShot: DocumentSnapshot = task.getResult()!!
                                         if (!userSnapShot.exists()){
                                             showUpdateDialog(account.phoneNumber.toString())
+                                        }
+                                        else{
+                                             Common.currentUser = userSnapShot.toObject(User::class.java)
+                                            bn_home.selectedItemId = R.id.action_home
                                         }
                                         if (dialog.isShowing)
                                             dialog.dismiss()
@@ -87,8 +96,6 @@ class HomeActivity : AppCompatActivity() {
                 return loadFragment(fragment)
             }
         })
-
-        bn_home.selectedItemId = R.id.action_home
     }
 
     private fun loadFragment(fragment: Fragment?): Boolean {
@@ -101,8 +108,6 @@ class HomeActivity : AppCompatActivity() {
 
 
     private fun showUpdateDialog(nomorHp: String) {
-
-
 
         bottomSheetDialog = BottomSheetDialog(this)
         bottomSheetDialog.setTitle("Satu langkah lagi!")
@@ -120,6 +125,10 @@ class HomeActivity : AppCompatActivity() {
                     bottomSheetDialog.dismiss()
                     if (dialog.isShowing)
                         dialog.dismiss()
+
+                    Common.currentUser = user
+                    bn_home.selectedItemId = R.id.action_home
+
                     Toast.makeText(this, "Terima kasih", Toast.LENGTH_SHORT).show()
                 }.addOnFailureListener {e ->
                     bottomSheetDialog.dismiss()
