@@ -30,7 +30,6 @@ class HomeActivity : AppCompatActivity() {
     lateinit var userRef: CollectionReference
     lateinit var bottomSheetDialog: BottomSheetDialog
     lateinit var dialog: AlertDialog
-    lateinit var fm: FragmentManager
     val homeFragment = HomeFragment()
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -39,13 +38,6 @@ class HomeActivity : AppCompatActivity() {
 
         userRef = FirebaseFirestore.getInstance().collection("User")
         dialog = SpotsDialog.Builder().setContext(this).setCancelable(false).build()
-        fm = supportFragmentManager
-
-        if (savedInstanceState != null){
-            fm.beginTransaction()
-                .add(R.id.fl_home, homeFragment)
-                .commit();
-        }
 
         if (intent != null){
             val isLogin: Boolean = intent.getBooleanExtra(Common.IS_LOGIN, false)
@@ -59,13 +51,15 @@ class HomeActivity : AppCompatActivity() {
                             currentUser.get()
                                 .addOnCompleteListener { task ->
                                     if (task.isSuccessful){
-                                        val userSnapShot: DocumentSnapshot = task.getResult()!!
+                                        val userSnapShot: DocumentSnapshot = task.result!!
                                         if (!userSnapShot.exists()){
                                             showUpdateDialog(account.phoneNumber.toString())
                                         }
                                         else{
-                                             Common.currentUser = userSnapShot.toObject(User::class.java)
-                                            bn_home.selectedItemId = R.id.action_home
+                                            Common.currentUser = userSnapShot.toObject(User::class.java)
+//                                            bn_home.menu.findItem(R.id.action_home).isChecked = true
+//                                            bn_home.selectedItemId = R.id.action_home
+
                                         }
                                         if (dialog.isShowing)
                                             dialog.dismiss()
@@ -88,6 +82,7 @@ class HomeActivity : AppCompatActivity() {
         
         bn_home.setOnNavigationItemSelectedListener(object : BottomNavigationView.OnNavigationItemSelectedListener {
             var fragment: Fragment? = null
+
             override fun onNavigationItemSelected(menuItem: MenuItem): Boolean {
                 if (menuItem.itemId == R.id.action_home)
                     fragment = HomeFragment()
@@ -96,6 +91,7 @@ class HomeActivity : AppCompatActivity() {
                 return loadFragment(fragment)
             }
         })
+
     }
 
     private fun loadFragment(fragment: Fragment?): Boolean {

@@ -4,9 +4,7 @@ import com.sstudio.pemesanansalonmobilmotor.Model.Banner
 import ss.com.bannerslider.adapters.SliderAdapter
 import ss.com.bannerslider.viewholder.ImageSlideViewHolder
 
-class HomeSliderAdapter: SliderAdapter() {
-
-    private val bannerList: List<Banner>? = null
+class HomeSliderAdapter(val bannerList: List<Banner>): SliderAdapter() {
 
     override fun getItemCount(): Int {
         return bannerList!!.size
