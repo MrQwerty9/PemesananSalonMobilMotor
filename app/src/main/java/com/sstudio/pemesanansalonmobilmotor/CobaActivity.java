@@ -1,5 +1,8 @@
 package com.sstudio.pemesanansalonmobilmotor;
 
+import android.content.BroadcastReceiver;
+import android.content.Context;
+import android.content.Intent;
 import android.view.MenuItem;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
@@ -24,6 +27,7 @@ public class CobaActivity extends AppCompatActivity {
 
     CollectionReference allSalonRef;
     IAllSalonLoadListener iAllSalonLoadListener;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -52,5 +56,6 @@ public class CobaActivity extends AppCompatActivity {
             }
         });
     }
+
 
 }

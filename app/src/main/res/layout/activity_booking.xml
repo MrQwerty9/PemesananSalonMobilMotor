@@ -23,14 +23,14 @@
             app:sv_doneTextColor="@color/putih"
             app:sv_doneStepMarkColor="@color/putih"/>
 
-    <androidx.viewpager.widget.ViewPager
+    <com.sstudio.pemesanansalonmobilmotor.common.NonSwipeViewPager
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:id="@+id/viewpager_bookig"
             android:layout_below="@+id/stepview_booking"
             android:layout_above="@+id/layout_button">
 
-    </androidx.viewpager.widget.ViewPager>
+    </com.sstudio.pemesanansalonmobilmotor.common.NonSwipeViewPager>
 
     <LinearLayout
             android:id="@+id/layout_button"

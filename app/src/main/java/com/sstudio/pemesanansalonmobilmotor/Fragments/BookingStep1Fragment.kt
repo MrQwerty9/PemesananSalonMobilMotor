@@ -17,6 +17,7 @@ import com.jaredrummler.materialspinner.MaterialSpinner
 import com.sstudio.pemesanansalonmobilmotor.Model.Salon
 import com.sstudio.pemesanansalonmobilmotor.R
 import com.sstudio.pemesanansalonmobilmotor.adapter.MySalonAdapter
+import com.sstudio.pemesanansalonmobilmotor.common.Common
 import com.sstudio.pemesanansalonmobilmotor.common.SpaceItemDecoration
 import com.sstudio.pemesanansalonmobilmotor.listener.IAllSalonLoadListener
 import com.sstudio.pemesanansalonmobilmotor.listener.IBranchLoadListener
@@ -100,6 +101,7 @@ class BookingStep1Fragment : Fragment(), IAllSalonLoadListener, IBranchLoadListe
 
     private fun loadBranchOfCity(cityName: String) {
         dialog.show()
+        Common.city = cityName
         branchRef = FirebaseFirestore.getInstance()
             .collection("Cabang")
             .document(cityName)
@@ -108,8 +110,12 @@ class BookingStep1Fragment : Fragment(), IAllSalonLoadListener, IBranchLoadListe
         branchRef.get().addOnCompleteListener { task ->
             val list = ArrayList<Salon>()
             if (task.isSuccessful){
-                for (queryDocumentSnapshot in task.result!!)
-                    list.add(queryDocumentSnapshot.toObject(Salon::class.java))
+                for (queryDocumentSnapshot in task.result!!){
+                    val salon = queryDocumentSnapshot.toObject(Salon::class.java)
+                    salon.salonId = queryDocumentSnapshot.id
+                    list.add(salon)
+                }
+
                 iBranchLoadListener.onBranchLoadSuccess(list)
             }
         }.addOnFailureListener {
