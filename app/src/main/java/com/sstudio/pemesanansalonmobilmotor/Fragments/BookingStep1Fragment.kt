@@ -45,7 +45,7 @@ class BookingStep1Fragment : Fragment(), IAllSalonLoadListener, IBranchLoadListe
         allSalonRef = FirebaseFirestore.getInstance().collection("Cabang")
         iAllSalonLoadListener = this
         iBranchLoadListener = this
-        dialog = SpotsDialog.Builder().setContext(activity).build()
+        dialog = SpotsDialog.Builder().setContext(activity).setCancelable(false).build()
         
     }
 

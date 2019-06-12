@@ -32,7 +32,7 @@ class BookingActivity : AppCompatActivity() {
 
         localBroadcastManager = LocalBroadcastManager.getInstance(this)
         localBroadcastManager.registerReceiver(buttonNextReceiver, IntentFilter(Common.KEY_ENABLE_BUTTON_NEXT))
-        dialog = SpotsDialog.Builder().setContext(this).build()
+        dialog = SpotsDialog.Builder().setContext(this).setCancelable(false).build()
         setupStepView()
         setColorButton()
 
@@ -53,6 +53,8 @@ class BookingActivity : AppCompatActivity() {
 //                else
 //                    btn_prevstep.isEnabled = true
                 stepview_booking.go(position, true)
+                btn_nextstep.isEnabled = false
+                //show step
                 btn_prevstep.isEnabled = position != 0
 
                 setColorButton()
@@ -69,17 +71,29 @@ class BookingActivity : AppCompatActivity() {
         btn_nextstep.setOnClickListener {
             if (Common.step < 3 || Common.step == 0){
                 Common.step++
-                if (Common.step == 1){
+                if (Common.step == 1){ //setelah pilih salon
                     if (Common.currentSalon != null)
                         loadBarberBySalon(Common.currentSalon!!.salonId)
+                }
+                else if (Common.step ==  2){ //pick slot waktu
+                    if (Common.currentBengkel != null)
+                        loadTimeSlotBengkel(Common.currentBengkel!!.bengkelId)
                 }
                 viewpager_bookig.currentItem = Common.step
             }
         }
     }
 
+    private fun loadTimeSlotBengkel(bengkelId: String) {
+        //kirim local broadcast ke fragment step 3
+        val intent = Intent(Common.KEY_DISPLAY_TIME_SLOT)
+        localBroadcastManager.sendBroadcast(intent)
+    }
+
     private fun loadBarberBySalon(salonId: String) {
         dialog.show()
+
+        //pilih semua bengkel di salon
         //Cabang/Semolowaru/Branch/03Fw4uig9UPvUSyjhdrR/Salon/9x9RvTB44HtJ85KztRPP
         barberRef = FirebaseFirestore.getInstance()
             .collection("Cabang")
@@ -132,7 +146,12 @@ class BookingActivity : AppCompatActivity() {
 
     private val buttonNextReceiver = object : BroadcastReceiver() {
         override fun onReceive(context: Context, intent: Intent) {
-            Common.currentSalon = intent.getParcelableExtra(Common.KEY_SALON_STORE)
+
+            val step = intent.getIntExtra(Common.KEY_STEP, 0)
+            if (step == 1)
+                Common.currentSalon = intent.getParcelableExtra(Common.KEY_SALON_STORE)
+            else if(step == 2)
+                Common.currentBengkel = intent.getParcelableExtra(Common.KEY_BENGKEL_SELECTED)
             btn_nextstep.isEnabled = true
         }
     }

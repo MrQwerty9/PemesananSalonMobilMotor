@@ -36,12 +36,17 @@ class MySalonAdapter(val context: Context, val salonList: List<Salon>): Recycler
 
         holder.setiRecyclerItemSelectedListener(object : IRecyclerItemSelectedListener {
             override fun onItemSelectedListener(view: View, pos: Int) {
+                //set background putin untuk semua card tdk dipilih
                 for (cardView: CardView in cardViewList)
                     cardView.setCardBackgroundColor(context.resources.getColor(android.R.color.white))
 
+                //set warna dipilih
                 holder.card_salon.setCardBackgroundColor(context.resources.getColor(android.R.color.holo_orange_dark))
+
+                //kirim broadcast untuk bookingActivity enable button next
                 val intent = Intent(Common.KEY_ENABLE_BUTTON_NEXT)
                 intent.putExtra(Common.KEY_SALON_STORE, salonList[pos])
+                intent.putExtra(Common.KEY_STEP, 1)
                 localBroadcastManager.sendBroadcast(intent)
             }
 

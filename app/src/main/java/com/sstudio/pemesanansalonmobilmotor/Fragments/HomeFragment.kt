@@ -96,7 +96,7 @@ class HomeFragment : Fragment(), IBannerLoadListener, ILookbookLoadListener {
     private fun setUserInformation(view: View) {
 
         view.layout_user_information.visibility = View.VISIBLE
-        view.tv_user_name.text = Common.currentUser!!.nama
+        view.tv_user_name.text = Common.currentUser?.nama
 
     }
 
