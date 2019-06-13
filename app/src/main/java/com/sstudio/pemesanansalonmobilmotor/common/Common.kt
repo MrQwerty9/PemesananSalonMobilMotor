@@ -3,6 +3,7 @@ package com.sstudio.pemesanansalonmobilmotor.common
 import com.sstudio.pemesanansalonmobilmotor.Model.Bengkel
 import com.sstudio.pemesanansalonmobilmotor.Model.Salon
 import com.sstudio.pemesanansalonmobilmotor.Model.User
+import java.text.SimpleDateFormat
 import java.util.*
 
 
@@ -20,6 +21,13 @@ object Common {
     val KEY_STEP:String = "STEP"
     val KEY_BENGKEL_SELECTED: String = "BENGKEL_SELECTED"
     val TIME_SLOT_TOTAL: Int = 5
+    val DISABLE_TAG = "DISABLE"
+    val KEY_TIME_SLOT = "TIME_SLOT"
+    var currentTimeSlot = -1
+    val KEY_CONFIRM_BOOKING = "CONFIRM_BOOKING"
+    var currentDate = Calendar.getInstance()
+    var simpleDateFormat = SimpleDateFormat("dd_MM_yyyy")
+
     fun convertTimeSlotToString(slot: Int): String{
         when(slot){
             0 -> return "7:00-9:00"

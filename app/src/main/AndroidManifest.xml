@@ -11,6 +11,8 @@
             android:roundIcon="@mipmap/ic_launcher_round"
             android:supportsRtl="true"
             android:theme="@style/AppTheme">
+        <activity android:name=".MainActivity">
+        </activity>
         <activity android:name=".BookingActivity">
         </activity>
         <activity android:name=".CobaActivity">
@@ -29,7 +31,7 @@
                 android:value="@string/ACCOUNT_KIT_CLIENT_TOKEN"/>
 
         <activity android:name="com.facebook.accountkit.ui.AccountKitActivity"/>
-        <activity android:name=".MainActivity">
+        <activity android:name=".SplashScreen">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN"/>
 

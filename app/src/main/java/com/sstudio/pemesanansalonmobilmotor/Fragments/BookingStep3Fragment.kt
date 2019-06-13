@@ -44,7 +44,6 @@ class BookingStep3Fragment : Fragment(), ITimeSlotLoadListener {
     private lateinit var iTimeSlotLoadListener: ITimeSlotLoadListener
     private lateinit var dialog: AlertDialog
     private lateinit var localBroadcastManager: LocalBroadcastManager
-    private lateinit var selected_date: Calendar
     private lateinit var simpleDateFormat: SimpleDateFormat
     private lateinit var mRv_time_slot: RecyclerView
 
@@ -58,9 +57,6 @@ class BookingStep3Fragment : Fragment(), ITimeSlotLoadListener {
         simpleDateFormat = SimpleDateFormat("dd_MM_yyyy")
 
         dialog = SpotsDialog.Builder().setContext(context).setCancelable(false).build()
-
-        selected_date = Calendar.getInstance()
-        selected_date.add(Calendar.DATE, 0) //current date
     }
 
     override fun onDestroy() {
@@ -74,7 +70,6 @@ class BookingStep3Fragment : Fragment(), ITimeSlotLoadListener {
             date.add(Calendar.DATE, 0) //add current date
             loadAvailableTimeSlotOfBengkel(Common.currentBengkel!!.bengkelId, simpleDateFormat.format(date.time))
         }
-
     }
 
     private fun loadAvailableTimeSlotOfBengkel(bengkelId: String, bookDate: String?) {
@@ -162,8 +157,8 @@ class BookingStep3Fragment : Fragment(), ITimeSlotLoadListener {
 
         horizontalCalendar.calendarListener = object : HorizontalCalendarListener() {
             override fun onDateSelected(date: Calendar?, position: Int) {
-                if (selected_date.timeInMillis != date!!.timeInMillis){
-                    selected_date = date!! //tidak load lagi jika milih hari baru yang sama dg hari yg telah dipilih
+                if (Common.currentDate.timeInMillis != date!!.timeInMillis){
+                    Common.currentDate = date!! //tidak load lagi jika milih hari baru yang sama dg hari yg telah dipilih
                     loadAvailableTimeSlotOfBengkel(Common.currentBengkel!!.bengkelId, simpleDateFormat.format(date.time))
 
                 }

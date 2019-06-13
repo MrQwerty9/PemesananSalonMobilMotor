@@ -65,6 +65,10 @@ class BookingActivity : AppCompatActivity() {
             if (Common.step == 3 || Common.step > 0){
                 Common.step--
                 viewpager_bookig.currentItem = Common.step
+                if(Common.step < 3){
+                    btn_nextstep.isEnabled = true
+                    setColorButton()
+                }
             }
         }
 
@@ -79,9 +83,19 @@ class BookingActivity : AppCompatActivity() {
                     if (Common.currentBengkel != null)
                         loadTimeSlotBengkel(Common.currentBengkel!!.bengkelId)
                 }
+                else if (Common.step ==  3){ //confirm
+                    if (Common.currentTimeSlot != -1)
+                        confirmBooking()
+                }
                 viewpager_bookig.currentItem = Common.step
             }
         }
+    }
+
+    private fun confirmBooking() {
+        //kitim broadcast ke fragment step 4
+        val intent = Intent(Common.KEY_CONFIRM_BOOKING)
+        localBroadcastManager.sendBroadcast(intent)
     }
 
     private fun loadTimeSlotBengkel(bengkelId: String) {
@@ -152,6 +166,8 @@ class BookingActivity : AppCompatActivity() {
                 Common.currentSalon = intent.getParcelableExtra(Common.KEY_SALON_STORE)
             else if(step == 2)
                 Common.currentBengkel = intent.getParcelableExtra(Common.KEY_BENGKEL_SELECTED)
+            else if(step == 3)
+                Common.currentTimeSlot = intent.getIntExtra(Common.KEY_TIME_SLOT, -1)
             btn_nextstep.isEnabled = true
         }
     }
