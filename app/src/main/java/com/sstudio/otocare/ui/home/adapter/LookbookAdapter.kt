@@ -1,4 +1,4 @@
-package com.sstudio.otocare.adapter
+package com.sstudio.otocare.ui.home.adapter
 
 import android.content.Context
 import android.view.LayoutInflater

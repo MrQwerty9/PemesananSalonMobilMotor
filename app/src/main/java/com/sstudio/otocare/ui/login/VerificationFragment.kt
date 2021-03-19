@@ -16,8 +16,8 @@ import androidx.fragment.app.Fragment
 import com.google.firebase.FirebaseException
 import com.google.firebase.FirebaseTooManyRequestsException
 import com.google.firebase.auth.*
-import com.sstudio.otocare.HomeActivity
 import com.sstudio.otocare.R
+import com.sstudio.otocare.ui.home.HomeActivity
 import kotlinx.android.synthetic.main.fragment_verification.*
 import java.util.concurrent.TimeUnit
 
@@ -33,8 +33,10 @@ class VerificationFragment : Fragment(), View.OnClickListener {
     private var mCounterDown : CountDownTimer? = null
     private var timeLeft : Long = -1
 
-    companion object{
-        const val EXTRA_PHONE_NUMBER = ""
+    companion object {
+        const val EXTRA_PHONE_NUMBER = "extra_phone_number"
+        const val SAVED_INSTANCE_PHONE_NUMBER = "saved_phone_number"
+        const val SAVED_INSTANCE_TIME_LEFT = "saved_time_left"
     }
 
     override fun onCreateView(
@@ -52,12 +54,12 @@ class VerificationFragment : Fragment(), View.OnClickListener {
             startVerfiy()
         }
         else {
-            phoneNumber = savedInstanceState.getString("phoneNumber")
+            phoneNumber = savedInstanceState.getString(SAVED_INSTANCE_PHONE_NUMBER)
             initView()
             startPhoneNumberVerification(phoneNumber.toString())
 
 
-            timeLeft = savedInstanceState.getLong("timeLeft")
+            timeLeft = savedInstanceState.getLong(SAVED_INSTANCE_TIME_LEFT)
             showTimer(timeLeft)
         }
     }
@@ -98,6 +100,19 @@ class VerificationFragment : Fragment(), View.OnClickListener {
         }
     }
 
+    override fun onSaveInstanceState(outState: Bundle) {
+        super.onSaveInstanceState(outState)
+        outState.putLong(SAVED_INSTANCE_TIME_LEFT, timeLeft)
+        outState.putString(SAVED_INSTANCE_PHONE_NUMBER, phoneNumber)
+    }
+
+    override fun onDestroy() {
+        super.onDestroy()
+        if (mCounterDown != null) {
+            mCounterDown!!.cancel()
+        }
+    }
+
     private fun resendVerificationCode(
         phoneNumber: String,
         token: PhoneAuthProvider.ForceResendingToken?
@@ -117,7 +132,6 @@ class VerificationFragment : Fragment(), View.OnClickListener {
         mAuth.signInWithCredential(credential)
             .addOnCompleteListener(requireActivity()) { task ->
                 if (task.isSuccessful) {
-
                     if (progressDialog != null) {
                         dismissProgressDialog(progressDialog)
                     }
@@ -138,10 +152,10 @@ class VerificationFragment : Fragment(), View.OnClickListener {
 
     private fun showProgressDialog(mActivity: Context, message: String, isCancelable: Boolean): ProgressDialog {
         progressDialog = ProgressDialog(mActivity)
-        progressDialog!!.show()
-        progressDialog!!.setCancelable(isCancelable)
-        progressDialog!!.setCanceledOnTouchOutside(false)
-        progressDialog!!.setMessage(message)
+        progressDialog?.show()
+        progressDialog?.setCancelable(isCancelable)
+        progressDialog?.setCanceledOnTouchOutside(false)
+        progressDialog?.setMessage(message)
         return progressDialog as ProgressDialog
     }
 
@@ -159,8 +173,6 @@ class VerificationFragment : Fragment(), View.OnClickListener {
                 timeLeft = millisUntilFinished
                 tv_counter_down.visibility = View.VISIBLE
                 tv_counter_down.text = "seconds remaining: " + millisUntilFinished / 1000
-
-
 
                 //here you can have your logic to set text to edittext
             }

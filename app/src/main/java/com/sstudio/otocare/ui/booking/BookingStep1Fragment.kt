@@ -1,14 +1,14 @@
-package com.sstudio.otocare.Fragments
+package com.sstudio.otocare.ui.booking
 
 
 
 import android.app.AlertDialog
 import android.os.Bundle
-import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
+import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.google.firebase.firestore.CollectionReference
@@ -48,7 +48,7 @@ class BookingStep1Fragment : Fragment(), IAllSalonLoadListener, IBranchLoadListe
         
     }
 
-    fun get_nstance(): BookingStep1Fragment{
+    fun get_nstance(): BookingStep1Fragment {
         if (mInstance == null)
             mInstance = BookingStep1Fragment()
         return mInstance!!
@@ -126,7 +126,7 @@ class BookingStep1Fragment : Fragment(), IAllSalonLoadListener, IBranchLoadListe
 Toast.makeText(activity, message, Toast.LENGTH_SHORT).show()
     }
     override fun onBranchLoadSuccess(salonList: List<Salon>) {
-        val adapter = MySalonAdapter(this!!.activity!!, salonList)
+        val adapter = MySalonAdapter(this.activity!!, salonList)
         rv_booking.adapter = adapter
         rv_booking.visibility = View.VISIBLE
 

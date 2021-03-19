@@ -1,27 +1,25 @@
-package com.sstudio.otocare.Fragments
+package com.sstudio.otocare.ui.home
 
 
 import android.content.Intent
 import android.os.Bundle
-import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
+import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.google.firebase.firestore.CollectionReference
 import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.firestore.QueryDocumentSnapshot
-import com.sstudio.otocare.BookingActivity
 import com.sstudio.otocare.Model.Banner
-
 import com.sstudio.otocare.R
-import com.sstudio.otocare.adapter.HomeSliderAdapter
-import com.sstudio.otocare.adapter.LookbookAdapter
-import com.sstudio.otocare.common.Common
 import com.sstudio.otocare.listener.IBannerLoadListener
 import com.sstudio.otocare.listener.ILookbookLoadListener
 import com.sstudio.otocare.services.PicassoImageLoadingServices
+import com.sstudio.otocare.ui.booking.BookingActivity
+import com.sstudio.otocare.ui.home.adapter.HomeSliderAdapter
+import com.sstudio.otocare.ui.home.adapter.LookbookAdapter
 import kotlinx.android.synthetic.main.fragment_home.*
 import kotlinx.android.synthetic.main.fragment_home.view.*
 import ss.com.bannerslider.Slider
@@ -94,7 +92,7 @@ class HomeFragment : Fragment(), IBannerLoadListener, ILookbookLoadListener {
     private fun setUserInformation(view: View) {
 
         view.layout_user_information.visibility = View.VISIBLE
-        view.tv_user_name.text = Common.currentUser?.nama
+        view.tv_user_name.text = HomeActivity.currentUser?.name
 
     }
 

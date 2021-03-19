@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8"?>
+<navigation xmlns:android="http://schemas.android.com/apk/res/android"
+        xmlns:app="http://schemas.android.com/apk/res-auto"
+        android:id="@+id/nav_main"
+        app:startDestination="@id/fragment_home">
+    <fragment
+            android:id="@+id/fragment_home"
+            android:name="com.sstudio.otocare.ui.home.HomeFragment">
+        <action
+                android:id="@+id/action_goto_shopping"
+                app:destination="@+id/fragment_shopping" />
+    </fragment>
+    <fragment
+            android:id="@+id/fragment_shopping"
+            android:name="com.sstudio.otocare.ui.shop.ShoppingFragment"></fragment>
+</navigation>

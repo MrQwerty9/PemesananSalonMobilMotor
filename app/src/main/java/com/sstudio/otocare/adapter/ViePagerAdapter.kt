@@ -3,10 +3,10 @@ package com.sstudio.otocare.adapter
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentManager
 import androidx.fragment.app.FragmentPagerAdapter
-import com.sstudio.otocare.Fragments.BookingStep1Fragment
-import com.sstudio.otocare.Fragments.BookingStep2Fragment
-import com.sstudio.otocare.Fragments.BookingStep3Fragment
-import com.sstudio.otocare.Fragments.BookingStep4Fragment
+import com.sstudio.otocare.ui.booking.BookingStep1Fragment
+import com.sstudio.otocare.ui.booking.BookingStep2Fragment
+import com.sstudio.otocare.ui.booking.BookingStep3Fragment
+import com.sstudio.otocare.ui.booking.BookingStep4Fragment
 
 class ViePagerAdapter(fm: FragmentManager) : FragmentPagerAdapter(fm) {
     override fun getItem(position: Int): Fragment {

@@ -1,4 +1,4 @@
-package com.sstudio.otocare.Fragments
+package com.sstudio.otocare.ui.booking
 
 
 import android.app.AlertDialog
@@ -8,11 +8,11 @@ import android.content.Intent
 import android.content.IntentFilter
 import android.os.Bundle
 import android.util.Log
-import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
+import androidx.fragment.app.Fragment
 import androidx.localbroadcastmanager.content.LocalBroadcastManager
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.RecyclerView
@@ -50,7 +50,7 @@ class BookingStep3Fragment : Fragment(), ITimeSlotLoadListener {
         super.onCreate(savedInstanceState)
 
         iTimeSlotLoadListener = this
-        localBroadcastManager = LocalBroadcastManager.getInstance(this!!.context!!)
+        localBroadcastManager = LocalBroadcastManager.getInstance(this.context!!)
         localBroadcastManager.registerReceiver(displayTimeSlot, IntentFilter(Common.KEY_DISPLAY_TIME_SLOT))
 
         simpleDateFormat = SimpleDateFormat("dd_MM_yyyy")
@@ -121,16 +121,17 @@ class BookingStep3Fragment : Fragment(), ITimeSlotLoadListener {
         }
     }
 
-    fun getmInstance(): BookingStep3Fragment{
+    fun getmInstance(): BookingStep3Fragment {
         if (mInstance == null)
             mInstance = BookingStep3Fragment()
         return mInstance!!
     }
+
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-        val itemView = inflater.inflate(R.layout.fragment_booking_step_three, container,false)
+        val itemView = inflater.inflate(R.layout.fragment_booking_step_three, container, false)
         initView(itemView)
         return itemView
     }
@@ -156,9 +157,13 @@ class BookingStep3Fragment : Fragment(), ITimeSlotLoadListener {
 
         horizontalCalendar.calendarListener = object : HorizontalCalendarListener() {
             override fun onDateSelected(date: Calendar?, position: Int) {
-                if (Common.currentDate.timeInMillis != date!!.timeInMillis){
-                    Common.currentDate = date!! //tidak load lagi jika milih hari baru yang sama dg hari yg telah dipilih
-                    loadAvailableTimeSlotOfBengkel(Common.currentBengkel!!.bengkelId, simpleDateFormat.format(date.time))
+                if (Common.currentDate.timeInMillis != date!!.timeInMillis) {
+                    Common.currentDate =
+                        date //tidak load lagi jika milih hari baru yang sama dg hari yg telah dipilih
+                    loadAvailableTimeSlotOfBengkel(
+                        Common.currentBengkel!!.bengkelId,
+                        simpleDateFormat.format(date.time)
+                    )
 
                 }
             }

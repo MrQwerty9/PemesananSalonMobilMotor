@@ -1,4 +1,4 @@
-package com.sstudio.otocare
+package com.sstudio.otocare.ui.booking
 
 import android.annotation.SuppressLint
 import android.app.AlertDialog
@@ -6,14 +6,15 @@ import android.content.BroadcastReceiver
 import android.content.Context
 import android.content.Intent
 import android.content.IntentFilter
-import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import androidx.appcompat.app.AppCompatActivity
 import androidx.localbroadcastmanager.content.LocalBroadcastManager
 import androidx.viewpager.widget.ViewPager
 import com.google.firebase.firestore.CollectionReference
 import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.firestore.QueryDocumentSnapshot
 import com.sstudio.otocare.Model.Bengkel
+import com.sstudio.otocare.R
 import com.sstudio.otocare.adapter.ViePagerAdapter
 import com.sstudio.otocare.common.Common
 import dmax.dialog.SpotsDialog

@@ -13,12 +13,10 @@
             android:theme="@style/AppTheme">
         <activity android:name="com.sstudio.otocare.ui.login.LoginActivity">
         </activity>
-        <activity android:name="com.sstudio.otocare.BookingActivity">
-        </activity>
+        <activity android:name="com.sstudio.otocare.ui.booking.BookingActivity"></activity>
         <activity android:name="com.sstudio.otocare.CobaActivity">
         </activity>
-        <activity android:name="com.sstudio.otocare.HomeActivity">
-        </activity>
+        <activity android:name="com.sstudio.otocare.ui.home.HomeActivity"></activity>
 
         <activity android:name="com.sstudio.otocare.SplashScreen">
             <intent-filter>

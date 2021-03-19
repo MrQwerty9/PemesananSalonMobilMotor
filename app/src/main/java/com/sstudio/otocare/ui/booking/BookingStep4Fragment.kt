@@ -1,4 +1,4 @@
-package com.sstudio.otocare.Fragments
+package com.sstudio.otocare.ui.booking
 
 import android.content.BroadcastReceiver
 import android.content.Context
@@ -6,13 +6,13 @@ import android.content.Intent
 import android.content.IntentFilter
 import android.os.Bundle
 import android.util.Log
-import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Button
 import android.widget.TextView
 import android.widget.Toast
+import androidx.fragment.app.Fragment
 import androidx.localbroadcastmanager.content.LocalBroadcastManager
 import com.google.firebase.firestore.FirebaseFirestore
 import com.sstudio.otocare.Model.BookingInformasi
@@ -81,14 +81,15 @@ class BookingStep4Fragment : Fragment(), View.OnClickListener {
             Log.d("mytag", "klik")
             bookingInformasi.bengkelId = Common.currentBengkel!!.bengkelId
             bookingInformasi.bengkelNama = Common.currentBengkel!!.nama
-            bookingInformasi.customerNama = Common.currentUser!!.nama
-            bookingInformasi.customerPhone = Common.currentUser!!.nomorHp
+            bookingInformasi.customerNama = Common.currentUser!!.name
+            bookingInformasi.customerPhone = Common.currentUser!!.phoneNumber
             bookingInformasi.salonId = Common.currentSalon!!.salonId
             bookingInformasi.salonAlamat = Common.currentSalon!!.alamat
             bookingInformasi.salonNama = Common.currentSalon!!.nama
             bookingInformasi.slot = Common.currentTimeSlot.toLong()
-            bookingInformasi.waktu = StringBuilder(Common.convertTimeSlotToString(Common.currentTimeSlot))
-                .append(" " + simpleDateFormat.format(Common.currentDate.time)).toString()
+            bookingInformasi.waktu =
+                StringBuilder(Common.convertTimeSlotToString(Common.currentTimeSlot))
+                    .append(" " + simpleDateFormat.format(Common.currentDate.time)).toString()
 
             val bookingDate = FirebaseFirestore.getInstance()
                 .collection("Cabang")

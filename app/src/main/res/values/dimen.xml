@@ -1,4 +1,4 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <dimen name="textCardSize">18sp</dimen>
+    <dimen name="textCardSize">13sp</dimen>
 </resources>

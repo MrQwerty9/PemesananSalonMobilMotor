@@ -1,10 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-              xmlns:tools="http://schemas.android.com/tools"
-              android:layout_width="match_parent"
-              android:layout_height="match_parent"
-              android:orientation="vertical"
-              tools:context=".Fragments.HomeFragment">
+        xmlns:tools="http://schemas.android.com/tools"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical"
+        tools:context=".ui.home.HomeFragment">
 
     <LinearLayout
             android:layout_width="match_parent"
@@ -14,12 +14,12 @@
             android:orientation="horizontal"
             android:weightSum="4"
             android:padding="8dp"
-            android:background="@color/button1">
+            android:background="@color/colorPrimary">
 
         <ImageView
                 android:src="@drawable/ic_account_circle_white_24dp"
                 android:layout_width="60dp"
-                android:layout_height="60dp"/>
+                android:layout_height="60dp" />
 
         <LinearLayout
                 android:layout_width="match_parent"
@@ -51,12 +51,13 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="horizontal"
+            android:background="@color/red_light"
             android:weightSum="4"
-            android:padding="8dp">
+            android:paddingVertical="30dp">
 
         <androidx.cardview.widget.CardView
                 android:id="@+id/cv_booking"
-                android:layout_marginRight="8dp"
+                android:layout_marginEnd="8dp"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_weight="1">
@@ -64,18 +65,20 @@
             <LinearLayout
                     android:orientation="vertical"
                     android:layout_width="match_parent"
-                    android:layout_height="wrap_content">
+                    android:layout_height="wrap_content"
+                    android:background="@color/red_light">
 
                 <ImageView
-                        android:layout_width="50dp"
-                        android:layout_height="50dp"
+                        android:layout_width="30dp"
+                        android:layout_height="30dp"
                         android:src="@drawable/ic_event_note_black_24dp"
-                        android:layout_gravity="center_horizontal"/>
+                        android:layout_gravity="center_horizontal" />
 
                 <TextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:text="Booking"
+                        android:textColor="@color/white"
                         android:layout_gravity="center_horizontal"
                         android:textSize="@dimen/textCardSize"/>
 
@@ -93,18 +96,20 @@
             <LinearLayout
                     android:orientation="vertical"
                     android:layout_width="match_parent"
-                    android:layout_height="wrap_content">
+                    android:layout_height="wrap_content"
+                    android:background="@color/red_light">
 
                 <ImageView
-                        android:layout_width="50dp"
-                        android:layout_height="50dp"
-                        android:src="@drawable/ic_shopping_cart_black_24dp"
-                        android:layout_gravity="center_horizontal"/>
+                        android:layout_width="30dp"
+                        android:layout_height="30dp"
+                        android:src="@drawable/ic_outline_shopping_cart_24"
+                        android:layout_gravity="center_horizontal" />
 
                 <TextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:text="Cart"
+                        android:textColor="@color/white"
                         android:layout_gravity="center_horizontal"
                         android:textSize="@dimen/textCardSize"/>
 
@@ -122,18 +127,20 @@
             <LinearLayout
                     android:orientation="vertical"
                     android:layout_width="match_parent"
-                    android:layout_height="wrap_content">
+                    android:layout_height="wrap_content"
+                    android:background="@color/red_light">
 
                 <ImageView
-                        android:layout_width="50dp"
-                        android:layout_height="50dp"
+                        android:layout_width="30dp"
+                        android:layout_height="30dp"
                         android:src="@drawable/ic_history_black_24dp"
-                        android:layout_gravity="center_horizontal"/>
+                        android:layout_gravity="center_horizontal" />
 
                 <TextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:text="History"
+                        android:textColor="@color/white"
                         android:layout_gravity="center_horizontal"
                         android:textSize="@dimen/textCardSize"/>
 
@@ -151,18 +158,20 @@
             <LinearLayout
                     android:orientation="vertical"
                     android:layout_width="match_parent"
-                    android:layout_height="wrap_content">
+                    android:layout_height="wrap_content"
+                    android:background="@color/red_light">
 
                 <ImageView
-                        android:layout_width="50dp"
-                        android:layout_height="50dp"
-                        android:src="@drawable/ic_notifications_black_24dp"
-                        android:layout_gravity="center_horizontal"/>
+                        android:layout_width="30dp"
+                        android:layout_height="30dp"
+                        android:src="@drawable/ic_outline_notifications_active_24"
+                        android:layout_gravity="center_horizontal" />
 
                 <TextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:text="Notification"
+                        android:textColor="@color/white"
                         android:layout_gravity="center_horizontal"
                         android:textSize="@dimen/textCardSize"/>
 

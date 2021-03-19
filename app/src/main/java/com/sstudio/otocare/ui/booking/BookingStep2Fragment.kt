@@ -1,14 +1,14 @@
-package com.sstudio.otocare.Fragments
+package com.sstudio.otocare.ui.booking
 
 import android.content.BroadcastReceiver
 import android.content.Context
 import android.content.Intent
 import android.content.IntentFilter
 import android.os.Bundle
-import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.fragment.app.Fragment
 import androidx.localbroadcastmanager.content.LocalBroadcastManager
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.RecyclerView
@@ -50,7 +50,7 @@ class BookingStep2Fragment : Fragment() {
         super.onDestroy()
     }
 
-    fun getmInstance(): BookingStep2Fragment{
+    fun getmInstance(): BookingStep2Fragment {
         if (mInstance == null)
             mInstance = BookingStep2Fragment()
         return mInstance!!
