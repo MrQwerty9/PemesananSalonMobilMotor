@@ -13,7 +13,6 @@ import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.google.firebase.firestore.CollectionReference
 import com.google.firebase.firestore.FirebaseFirestore
-import com.sstudio.otocare.Model.Salon
 import com.sstudio.otocare.R
 import com.sstudio.otocare.adapter.MySalonAdapter
 import com.sstudio.otocare.common.Common
@@ -107,10 +106,11 @@ class BookingStep1Fragment : Fragment(), IAllSalonLoadListener, IBranchLoadListe
             .collection("Branch")
 
         branchRef.get().addOnCompleteListener { task ->
-            val list = ArrayList<Salon>()
+            val list = ArrayList<com.sstudio.core.domain.model.Salon>()
             if (task.isSuccessful){
-                for (queryDocumentSnapshot in task.result!!){
-                    val salon = queryDocumentSnapshot.toObject(Salon::class.java)
+                for (queryDocumentSnapshot in task.result!!) {
+                    val salon =
+                        queryDocumentSnapshot.toObject(com.sstudio.core.domain.model.Salon::class.java)
                     salon.salonId = queryDocumentSnapshot.id
                     list.add(salon)
                 }
@@ -123,9 +123,10 @@ class BookingStep1Fragment : Fragment(), IAllSalonLoadListener, IBranchLoadListe
     }
 
     override fun onAllSalonLoadFailed(message: String) {
-Toast.makeText(activity, message, Toast.LENGTH_SHORT).show()
+        Toast.makeText(activity, message, Toast.LENGTH_SHORT).show()
     }
-    override fun onBranchLoadSuccess(salonList: List<Salon>) {
+
+    override fun onBranchLoadSuccess(salonList: List<com.sstudio.core.domain.model.Salon>) {
         val adapter = MySalonAdapter(this.activity!!, salonList)
         rv_booking.adapter = adapter
         rv_booking.visibility = View.VISIBLE

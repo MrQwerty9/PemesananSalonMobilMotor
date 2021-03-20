@@ -10,7 +10,7 @@
             android:layout_height="wrap_content">
 
         <com.google.android.material.textfield.TextInputEditText
-                android:id="@+id/et_nama"
+                android:id="@+id/et_name"
                 android:hint="Nama"
                 android:inputType="text"
                 android:layout_width="match_parent"
@@ -23,7 +23,7 @@
             android:layout_height="wrap_content">
 
         <com.google.android.material.textfield.TextInputEditText
-                android:id="@+id/et_alamat"
+                android:id="@+id/et_address"
                 android:hint="Alamat"
                 android:inputType="text"
                 android:layout_width="match_parent"

@@ -3,7 +3,6 @@ package com.sstudio.otocare.ui.login
 import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
 import com.sstudio.otocare.R
-import kotlinx.android.synthetic.main.activity_login.*
 
 
 class LoginActivity : AppCompatActivity() {

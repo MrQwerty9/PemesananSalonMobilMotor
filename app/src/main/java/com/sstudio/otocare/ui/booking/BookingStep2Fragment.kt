@@ -12,9 +12,9 @@ import androidx.fragment.app.Fragment
 import androidx.localbroadcastmanager.content.LocalBroadcastManager
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.RecyclerView
-import com.sstudio.otocare.Model.Bengkel
+import com.sstudio.core.domain.model.Bengkel
 import com.sstudio.otocare.R
-import com.sstudio.otocare.adapter.MyBengkelAdapter
+import com.sstudio.otocare.adapter.GarageAdapter
 import com.sstudio.otocare.common.Common
 import com.sstudio.otocare.common.SpaceItemDecoration
 import kotlinx.android.synthetic.main.fragment_booking_step_two.view.*
@@ -31,8 +31,9 @@ class BookingStep2Fragment : Fragment() {
 
     private fun bengkelDoneReceiver() = object : BroadcastReceiver(){
         override fun onReceive(context: Context?, intent: Intent?) {
-            val bengkelArrayList: ArrayList<Bengkel>? = intent?.getParcelableArrayListExtra(Common.KEY_BENGKEL_LOAD_DONE)
-            val adapter = MyBengkelAdapter(context!!, bengkelArrayList!!)
+            val bengkelArrayList: ArrayList<com.sstudio.core.domain.model.Bengkel>? =
+                intent?.getParcelableArrayListExtra(Common.KEY_BENGKEL_LOAD_DONE)
+            val adapter = GarageAdapter(context!!, bengkelArrayList!!)
             rv_booking.adapter = adapter
         }
 

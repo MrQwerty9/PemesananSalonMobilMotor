@@ -7,18 +7,21 @@ import android.view.ViewGroup
 import android.widget.ImageView
 import androidx.recyclerview.widget.RecyclerView
 import com.squareup.picasso.Picasso
-import com.sstudio.otocare.Model.Banner
 import com.sstudio.otocare.R
 import kotlinx.android.synthetic.main.layout_lookbook.view.*
 
-class LookbookAdapter(val context: Context, val lookbook: List<Banner>): RecyclerView.Adapter<LookbookAdapter.viewHolder>() {
+class LookbookAdapter(
+    val context: Context,
+    val lookbook: List<com.sstudio.core.domain.model.Banner>
+) : RecyclerView.Adapter<LookbookAdapter.viewHolder>() {
 
     class viewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
         var imageView: ImageView = itemView.iv_lookbook
 
     }
+
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): viewHolder {
-        val itemView = LayoutInflater.from(context).inflate(R.layout.layout_lookbook,parent,false)
+        val itemView = LayoutInflater.from(context).inflate(R.layout.layout_lookbook, parent, false)
         return viewHolder(itemView)
     }
 

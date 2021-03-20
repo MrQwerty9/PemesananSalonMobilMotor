@@ -1,4 +1,4 @@
-package com.sstudio.otocare.Model
+package com.sstudio.core.domain.model
 
 data class User(
     val name: String = "name",

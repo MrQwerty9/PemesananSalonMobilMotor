@@ -1,22 +1,20 @@
 package com.sstudio.otocare.common
 
-import com.sstudio.otocare.Model.Bengkel
-import com.sstudio.otocare.Model.Salon
-import com.sstudio.otocare.Model.User
+import com.sstudio.core.domain.model.Bengkel
 import java.text.SimpleDateFormat
 import java.util.*
 
 
 object Common {
     var IS_LOGIN: String = "IsLogin"
-    var currentUser: User? = null
+    var currentUser: com.sstudio.core.domain.model.User? = null
     var KEY_ENABLE_BUTTON_NEXT: String = "ENABLE_BUTTON_NEXT"
     var KEY_SALON_STORE = "SALON_SAVE"
-    var currentSalon: Salon? = null
+    var currentSalon: com.sstudio.core.domain.model.Salon? = null
     var step: Int = 0
     var city: String = ""
     val KEY_BENGKEL_LOAD_DONE: String = "BENGKEL_LOAD_DONE"
-    var currentBengkel: Bengkel? = null
+    var currentBengkel: com.sstudio.core.domain.model.Bengkel? = null
     val KEY_DISPLAY_TIME_SLOT: String = "DISPLAY_TIMA_SLOT"
     val KEY_STEP:String = "STEP"
     val KEY_BENGKEL_SELECTED: String = "BENGKEL_SELECTED"

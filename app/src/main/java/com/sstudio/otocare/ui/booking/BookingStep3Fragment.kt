@@ -18,7 +18,6 @@ import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.google.firebase.firestore.DocumentReference
 import com.google.firebase.firestore.FirebaseFirestore
-import com.sstudio.otocare.Model.TimeSlot
 import com.sstudio.otocare.R
 import com.sstudio.otocare.adapter.MyTimeSlotAdapter
 import com.sstudio.otocare.common.Common
@@ -107,9 +106,9 @@ class BookingStep3Fragment : Fragment(), ITimeSlotLoadListener {
                             }
                             else{//jika ada janji
                                 Log.d("step3", "ada janji")
-                                val timeSlot = ArrayList<TimeSlot>()
+                                val timeSlot = ArrayList<com.sstudio.core.domain.model.TimeSlot>()
                                 for (document in it.result!!)
-                                    timeSlot.add(document.toObject(TimeSlot::class.java))
+                                    timeSlot.add(document.toObject(com.sstudio.core.domain.model.TimeSlot::class.java))
                                 iTimeSlotLoadListener.onTimeSlotLoadSuccess(timeSlot)
                             }
                         }
@@ -171,7 +170,7 @@ class BookingStep3Fragment : Fragment(), ITimeSlotLoadListener {
         }
     }
 
-    override fun onTimeSlotLoadSuccess(timeSlotList: ArrayList<TimeSlot>) {
+    override fun onTimeSlotLoadSuccess(timeSlotList: ArrayList<com.sstudio.core.domain.model.TimeSlot>) {
         val adapter = MyTimeSlotAdapter(context!!, timeSlotList)
         mRv_time_slot.adapter = adapter
 

@@ -8,24 +8,23 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.navigation.fragment.NavHostFragment
 import androidx.navigation.ui.NavigationUI
 import com.google.android.material.bottomsheet.BottomSheetDialog
-import com.google.firebase.auth.FirebaseAuth
-import com.google.firebase.firestore.CollectionReference
-import com.google.firebase.firestore.FirebaseFirestore
-import com.sstudio.otocare.Model.User
+import com.sstudio.core.data.Resource
+import com.sstudio.core.domain.model.User
 import com.sstudio.otocare.R
-import com.sstudio.otocare.common.Common
+import com.sstudio.otocare.databinding.ActivityHomeBinding
+import com.sstudio.otocare.databinding.LayoutUpdateInformationBinding
 import com.sstudio.otocare.ui.login.LoginActivity
 import dmax.dialog.SpotsDialog
-import kotlinx.android.synthetic.main.activity_home.*
-import kotlinx.android.synthetic.main.layout_update_information.view.*
+import org.koin.android.viewmodel.ext.android.viewModel
 
 
 class HomeActivity : AppCompatActivity() {
 
-    lateinit var userRef: CollectionReference
     lateinit var bottomSheetDialog: BottomSheetDialog
     lateinit var dialog: AlertDialog
     private var isLogin = false
+    private lateinit var binding: ActivityHomeBinding
+    private val viewModel: HomeViewModel by viewModel()
 
     companion object {
         var currentUser: User? = null
@@ -34,8 +33,8 @@ class HomeActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_home)
+        binding = ActivityHomeBinding.inflate(layoutInflater)
 
-        userRef = FirebaseFirestore.getInstance().collection("User")
         dialog = SpotsDialog.Builder().setContext(this).setCancelable(false).build()
 
         dialog.show()
@@ -44,34 +43,34 @@ class HomeActivity : AppCompatActivity() {
         val navController = supportFragmentManager
             .findFragmentById(R.id.fragment_nav_host) as NavHostFragment
         NavigationUI.setupWithNavController(
-            bottom_nav,
+            binding.bottomNav,
             navController.navController
         )
     }
 
     private fun checkCurrentUser() {
-        val user = FirebaseAuth.getInstance().currentUser
-        val userPhone = user?.phoneNumber
-        if (user != null) {
+        val userPhone = viewModel.currentUserAuth.phoneNumber
+        if (userPhone != null) {
             isLogin = true
-            val currentUserRef = userRef.document(userPhone.toString())
-            currentUserRef.get()
-                .addOnCompleteListener {
-                    if (it.isSuccessful) {
-                        val userSnapShot = it.result
-                        if (userSnapShot?.exists() == false) {
-                            userPhone?.let { it1 -> showUpdateDialog(it1) }
-                        } else {
-                            userSnapShot?.let { documentSnapShot ->
-                                currentUser = User(
-                                    name = documentSnapShot[User().name].toString(),
-                                    address = documentSnapShot[User().address].toString(),
-                                    phoneNumber = documentSnapShot[User().phoneNumber].toString()
-                                )
+
+            viewModel.getUser?.observe(this) { resource ->
+                when (resource) {
+                    is Resource.Loading -> dialog.show()
+                    is Resource.Success -> {
+                        dialog.dismiss()
+                        resource.data?.let {
+                            currentUser = it
+                            if (it == User()) {
+                                showUpdateDialog(userPhone)
                             }
                         }
                     }
+                    is Resource.Error -> {
+                        dialog.dismiss()
+//                        Toast.makeText(this, resource.message, Toast.LENGTH_SHORT).show()
+                    }
                 }
+            }
         } else {
             startActivity(Intent(this, LoginActivity::class.java))
         }
@@ -84,34 +83,34 @@ class HomeActivity : AppCompatActivity() {
         bottomSheetDialog.setTitle("Satu langkah lagi!")
         bottomSheetDialog.setCanceledOnTouchOutside(false)
         bottomSheetDialog.setCancelable(false)
-        val sheetView = layoutInflater.inflate(R.layout.layout_update_information, null)
+        val sheetViewBinding = LayoutUpdateInformationBinding.inflate(layoutInflater, null, false)
+        bottomSheetDialog.setContentView(sheetViewBinding.root)
+        bottomSheetDialog.show()
 
-        sheetView.btn_update.setOnClickListener {
+        sheetViewBinding.btnUpdate.setOnClickListener {
             if (!dialog.isShowing)
                 dialog.show()
             val user = User(
-                sheetView.et_nama.text.toString(),
-                sheetView.et_alamat.text.toString(),
+                sheetViewBinding.etName.text.toString(),
+                sheetViewBinding.etAddress.text.toString(),
                 phoneNumber
             )
-            userRef.document(phoneNumber)
-                .set(user)
-                .addOnSuccessListener {
-                    bottomSheetDialog.dismiss()
-                    if (dialog.isShowing)
+            viewModel.setUser(user).observe(this) { resource ->
+                when (resource) {
+                    is Resource.Loading -> dialog.show()
+                    is Resource.Success -> {
                         dialog.dismiss()
-
-                    Common.currentUser = user
-                }.addOnFailureListener { e ->
-                    bottomSheetDialog.dismiss()
-                    if (dialog.isShowing)
+                        resource.data?.let {
+                            currentUser = user
+                        }
+                    }
+                    is Resource.Error -> {
                         dialog.dismiss()
-                    Toast.makeText(this, "updateDialog" + e.message, Toast.LENGTH_SHORT).show()
+                        Toast.makeText(this, resource.message, Toast.LENGTH_SHORT).show()
+                    }
                 }
-
+            }
         }
-        bottomSheetDialog.setContentView(sheetView)
-        bottomSheetDialog.show()
     }
 }
 

@@ -13,7 +13,7 @@ import androidx.viewpager.widget.ViewPager
 import com.google.firebase.firestore.CollectionReference
 import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.firestore.QueryDocumentSnapshot
-import com.sstudio.otocare.Model.Bengkel
+import com.sstudio.core.domain.model.Bengkel
 import com.sstudio.otocare.R
 import com.sstudio.otocare.adapter.ViePagerAdapter
 import com.sstudio.otocare.common.Common
@@ -117,9 +117,10 @@ class BookingActivity : AppCompatActivity() {
             .collection("Salon")
         barberRef.get()
             .addOnCompleteListener {
-                val bengkels = ArrayList<Bengkel>()
-                for (bengkelsnapShot: QueryDocumentSnapshot in it.result!!){
-                    val bengkel = bengkelsnapShot.toObject(Bengkel::class.java)
+                val bengkels = ArrayList<com.sstudio.core.domain.model.Bengkel>()
+                for (bengkelsnapShot: QueryDocumentSnapshot in it.result!!) {
+                    val bengkel =
+                        bengkelsnapShot.toObject(com.sstudio.core.domain.model.Bengkel::class.java)
                     bengkel.password = ""
                     bengkel.bengkelId = bengkelsnapShot.id
 

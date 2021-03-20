@@ -1,10 +1,10 @@
 package com.sstudio.otocare.ui.home.adapter
 
-import com.sstudio.otocare.Model.Banner
 import ss.com.bannerslider.adapters.SliderAdapter
 import ss.com.bannerslider.viewholder.ImageSlideViewHolder
 
-class HomeSliderAdapter(val bannerList: List<Banner>): SliderAdapter() {
+class HomeSliderAdapter(val bannerList: List<com.sstudio.core.domain.model.Banner>) :
+    SliderAdapter() {
 
     override fun getItemCount(): Int {
         return bannerList.size

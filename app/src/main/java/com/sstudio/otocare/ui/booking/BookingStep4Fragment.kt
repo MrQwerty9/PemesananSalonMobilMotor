@@ -15,7 +15,7 @@ import android.widget.Toast
 import androidx.fragment.app.Fragment
 import androidx.localbroadcastmanager.content.LocalBroadcastManager
 import com.google.firebase.firestore.FirebaseFirestore
-import com.sstudio.otocare.Model.BookingInformasi
+import com.sstudio.core.domain.model.BookingInformasi
 import com.sstudio.otocare.R
 import com.sstudio.otocare.common.Common
 import kotlinx.android.synthetic.main.fragment_booking_step_four.view.*
@@ -40,7 +40,7 @@ class BookingStep4Fragment : Fragment(), View.OnClickListener {
     private lateinit var mTv_nama_salon: TextView
     private lateinit var mTv_nama_teknisi: TextView
     private lateinit var btn_confirm: Button
-    private val bookingInformasi = BookingInformasi()
+    private val bookingInformasi = com.sstudio.core.domain.model.BookingInformasi()
 
     fun getmInstance(): BookingStep4Fragment {
         if (mInstance == null)
@@ -133,7 +133,7 @@ class BookingStep4Fragment : Fragment(), View.OnClickListener {
     private fun setData() {
         mTv_waktu.text = StringBuilder(Common.convertTimeSlotToString(Common.currentTimeSlot))
             .append(" " + simpleDateFormat.format(Common.currentDate.time))
-        mTv_nama_teknisi.text = Common.currentBengkel?.nama
+        mTv_nama_teknisi.text = Common.currentBengkel.nama
         mTv_phone.text = Common.currentSalon?.phone
         mTv_nama_salon.text = Common.currentSalon?.nama
 

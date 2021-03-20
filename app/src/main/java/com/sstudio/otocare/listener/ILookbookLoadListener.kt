@@ -1,8 +1,6 @@
 package com.sstudio.otocare.listener
 
-import com.sstudio.otocare.Model.Banner
-
 interface ILookbookLoadListener {
-    fun onLookbookLoadSuccess(banner: List<Banner>)
+    fun onLookbookLoadSuccess(banner: List<com.sstudio.core.domain.model.Banner>)
     fun onLookbookLoadFailed(message: String)
 }

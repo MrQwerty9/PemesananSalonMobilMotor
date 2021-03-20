@@ -9,7 +9,6 @@ import android.view.ViewGroup
 import androidx.cardview.widget.CardView
 import androidx.localbroadcastmanager.content.LocalBroadcastManager
 import androidx.recyclerview.widget.RecyclerView
-import com.sstudio.otocare.Model.TimeSlot
 import com.sstudio.otocare.R
 import com.sstudio.otocare.common.Common
 import com.sstudio.otocare.listener.IRecyclerItemSelectedListener
@@ -17,11 +16,14 @@ import kotlinx.android.synthetic.main.layout_time_slot.view.*
 
 class MyTimeSlotAdapter(var context: Context): RecyclerView.Adapter<MyTimeSlotAdapter.ViewHolder>() {
 
-    private var timeSlotList = ArrayList<TimeSlot>()
+    private var timeSlotList = ArrayList<com.sstudio.core.domain.model.TimeSlot>()
     private var localBroadcastManager = LocalBroadcastManager.getInstance(context)
     private var cardViewList = ArrayList<CardView>()
 
-    constructor(context: Context, timeSlotList: ArrayList<TimeSlot>) : this(context){
+    constructor(
+        context: Context,
+        timeSlotList: ArrayList<com.sstudio.core.domain.model.TimeSlot>
+    ) : this(context) {
         this.timeSlotList = timeSlotList
         this.context = context
         Log.d("step3", "ada janji $timeSlotList")
@@ -47,10 +49,10 @@ class MyTimeSlotAdapter(var context: Context): RecyclerView.Adapter<MyTimeSlotAd
             holder.card_time_slot.setCardBackgroundColor(context.resources.getColor(android.R.color.white))
         }
         else { //jika ada posisi full
-            for (slotValue: TimeSlot in timeSlotList){
+            for (slotValue: com.sstudio.core.domain.model.TimeSlot in timeSlotList) {
                 //Loop all time slot from service
                 val slot = Integer.parseInt(slotValue.slot.toString())
-                if (slot == position){
+                if (slot == position) {
                     //set semua item ke full
                     //set all remain card background without change full time slot
 

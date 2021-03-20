@@ -9,12 +9,14 @@ import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import com.google.firebase.auth.FirebaseAuth
 import com.sstudio.otocare.R
+import com.sstudio.otocare.databinding.FragmentFormLoginBinding
 import com.sstudio.otocare.ui.home.HomeActivity
-import kotlinx.android.synthetic.main.fragment_form_login.*
 
 class FormLoginFragment : Fragment(), View.OnClickListener {
 
     private var phoneNumber = ""
+    private var _binding: FragmentFormLoginBinding? = null
+    private val binding get() = _binding!!
 
     companion object {
         const val SAVED_INSTANCE_PHONE_NUMBER = "saved_phone_number"
@@ -34,10 +36,10 @@ class FormLoginFragment : Fragment(), View.OnClickListener {
 
         if (savedInstanceState != null) {
             phoneNumber = savedInstanceState.getString(SAVED_INSTANCE_PHONE_NUMBER) ?: ""
-            et_phone_number.setText(phoneNumber)
+            binding.etPhoneNumber.setText(phoneNumber)
         }
 
-        btn_login.setOnClickListener(this)
+        binding.btnLogin.setOnClickListener(this)
 
     }
 
@@ -54,10 +56,10 @@ class FormLoginFragment : Fragment(), View.OnClickListener {
 
     override fun onClick(v: View?) {
         when (v) {
-            btn_login -> {
+            binding.btnLogin -> {
                 val arguments = Bundle()
-                val phoneNumber = et_phone_number.text.toString()
-                val countryCode = code_picker.selectedCountryCodeWithPlus
+                val phoneNumber = binding.etPhoneNumber.text.toString()
+                val countryCode = binding.codePicker.selectedCountryCodeWithPlus
                 arguments.putString(
                     VerificationFragment.EXTRA_PHONE_NUMBER,
                     "$countryCode$phoneNumber"

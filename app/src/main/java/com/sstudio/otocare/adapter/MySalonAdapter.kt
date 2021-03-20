@@ -8,19 +8,20 @@ import android.view.ViewGroup
 import androidx.cardview.widget.CardView
 import androidx.localbroadcastmanager.content.LocalBroadcastManager
 import androidx.recyclerview.widget.RecyclerView
-import com.sstudio.otocare.Model.Salon
 import com.sstudio.otocare.R
 import com.sstudio.otocare.common.Common
 import com.sstudio.otocare.listener.IRecyclerItemSelectedListener
-import kotlinx.android.synthetic.main.layout_salon.view.*
 
-class MySalonAdapter(val context: Context, val salonList: List<Salon>): RecyclerView.Adapter<MySalonAdapter.viewHolder>() {
+class MySalonAdapter(
+    val context: Context,
+    val salonList: List<com.sstudio.core.domain.model.Salon>
+) : RecyclerView.Adapter<MySalonAdapter.viewHolder>() {
 
     var cardViewList = ArrayList<CardView>()
     val localBroadcastManager = LocalBroadcastManager.getInstance(context)
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): viewHolder {
-        val itemView = LayoutInflater.from(context).inflate(R.layout.layout_salon, parent, false)
+        val itemView = LayoutInflater.from(context).inflate(R.layout.item_salon, parent, false)
         return viewHolder(itemView)
     }
 
