@@ -11,43 +11,53 @@ import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import androidx.localbroadcastmanager.content.LocalBroadcastManager
 import androidx.recyclerview.widget.GridLayoutManager
-import androidx.recyclerview.widget.RecyclerView
-import com.sstudio.core.domain.model.Bengkel
+import com.sstudio.core.domain.model.Garage
 import com.sstudio.otocare.R
-import com.sstudio.otocare.adapter.GarageAdapter
 import com.sstudio.otocare.common.Common
 import com.sstudio.otocare.common.SpaceItemDecoration
-import kotlinx.android.synthetic.main.fragment_booking_step_two.view.*
+import com.sstudio.otocare.databinding.FragmentBookingStepTwoBinding
+import com.sstudio.otocare.ui.booking.adapter.GarageAdapter
 
-/**
- * A simple [Fragment] subclass.
- *
- */
 class BookingStep2Fragment : Fragment() {
 
     var mInstance: BookingStep2Fragment? = null
     private lateinit var localBroadcastManager: LocalBroadcastManager
-    private lateinit var rv_booking: RecyclerView
+    private var _binding: FragmentBookingStepTwoBinding? = null
+    private val binding get() = _binding!!
 
-    private fun bengkelDoneReceiver() = object : BroadcastReceiver(){
+    override fun onCreateView(
+        inflater: LayoutInflater, container: ViewGroup?,
+        savedInstanceState: Bundle?
+    ): View? {
+        val itemView = inflater.inflate(R.layout.fragment_booking_step_two, container, false)
+
+        initView()
+        return itemView
+
+    }
+
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
+
+        localBroadcastManager = LocalBroadcastManager.getInstance(requireContext())
+        localBroadcastManager.registerReceiver(
+            garageDoneReceiver(),
+            IntentFilter(Common.KEY_BENGKEL_LOAD_DONE)
+        )
+    }
+
+    private fun garageDoneReceiver() = object : BroadcastReceiver() {
         override fun onReceive(context: Context?, intent: Intent?) {
-            val bengkelArrayList: ArrayList<com.sstudio.core.domain.model.Bengkel>? =
+            val garageList: ArrayList<Garage>? =
                 intent?.getParcelableArrayListExtra(Common.KEY_BENGKEL_LOAD_DONE)
-            val adapter = GarageAdapter(context!!, bengkelArrayList!!)
-            rv_booking.adapter = adapter
+            val adapter = GarageAdapter(context!!, garageList!!)
+            binding.rvBookingStepTwo.adapter = adapter
         }
 
     }
 
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-
-        localBroadcastManager = LocalBroadcastManager.getInstance(requireContext())
-        localBroadcastManager.registerReceiver(bengkelDoneReceiver(), IntentFilter(Common.KEY_BENGKEL_LOAD_DONE))
-    }
-
     override fun onDestroy() {
-        localBroadcastManager.unregisterReceiver(bengkelDoneReceiver())
+        localBroadcastManager.unregisterReceiver(garageDoneReceiver())
         super.onDestroy()
     }
 
@@ -57,22 +67,10 @@ class BookingStep2Fragment : Fragment() {
         return mInstance!!
     }
 
-    override fun onCreateView(
-        inflater: LayoutInflater, container: ViewGroup?,
-        savedInstanceState: Bundle?
-    ): View? {
-        val itemView = inflater.inflate(R.layout.fragment_booking_step_two, container,false)
-        rv_booking = itemView.rv_booking_step_two
-
-        initView()
-        return itemView
-
-    }
-
     private fun initView() {
-        rv_booking.setHasFixedSize(true)
-        rv_booking.layoutManager = GridLayoutManager(activity, 2)
-        rv_booking.addItemDecoration(SpaceItemDecoration(4))
+        binding.rvBookingStepTwo.setHasFixedSize(true)
+        binding.rvBookingStepTwo.layoutManager = GridLayoutManager(activity, 2)
+        binding.rvBookingStepTwo.addItemDecoration(SpaceItemDecoration(4))
     }
 
 

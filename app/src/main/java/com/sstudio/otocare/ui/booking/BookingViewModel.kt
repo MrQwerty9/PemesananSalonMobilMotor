@@ -1,6 +1,5 @@
-package com.sstudio.otocare.ui.home
+package com.sstudio.otocare.ui.booking
 
-import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
@@ -11,7 +10,7 @@ import com.sstudio.core.domain.model.Banner
 import com.sstudio.core.domain.model.User
 import com.sstudio.core.domain.usecase.OtoCareUseCase
 
-class HomeViewModel(private val otoCareUseCase: OtoCareUseCase) : ViewModel() {
+class BookingViewModel(private val otoCareUseCase: OtoCareUseCase) : ViewModel() {
 
     var userPhone = ""
 
@@ -45,7 +44,6 @@ class HomeViewModel(private val otoCareUseCase: OtoCareUseCase) : ViewModel() {
 
     var getHomeLookBook: LiveData<Resource<List<Banner>>>? = null
         get() {
-            Log.d("mytag", "vm banner cek")
             if (field == null) {
                 field = MutableLiveData()
                 field = otoCareUseCase.getHomeLookBook().asLiveData()

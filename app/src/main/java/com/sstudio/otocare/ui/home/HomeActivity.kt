@@ -5,7 +5,8 @@ import android.content.Intent
 import android.os.Bundle
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
-import androidx.navigation.fragment.NavHostFragment
+import androidx.navigation.NavController
+import androidx.navigation.findNavController
 import androidx.navigation.ui.NavigationUI
 import com.google.android.material.bottomsheet.BottomSheetDialog
 import com.sstudio.core.data.Resource
@@ -32,19 +33,18 @@ class HomeActivity : AppCompatActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_home)
         binding = ActivityHomeBinding.inflate(layoutInflater)
+        setContentView(binding.root)
 
         dialog = SpotsDialog.Builder().setContext(this).setCancelable(false).build()
 
         dialog.show()
         checkCurrentUser()
 
-        val navController = supportFragmentManager
-            .findFragmentById(R.id.fragment_nav_host) as NavHostFragment
+        val navController: NavController = findNavController(R.id.fragment_nav_host)
         NavigationUI.setupWithNavController(
             binding.bottomNav,
-            navController.navController
+            navController
         )
     }
 

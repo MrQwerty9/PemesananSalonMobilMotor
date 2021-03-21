@@ -1,20 +1,21 @@
-package com.sstudio.otocare.adapter
+package com.sstudio.otocare.ui.booking.adapter
 
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentManager
-import androidx.fragment.app.FragmentPagerAdapter
+import androidx.fragment.app.FragmentStatePagerAdapter
 import com.sstudio.otocare.ui.booking.BookingStep1Fragment
 import com.sstudio.otocare.ui.booking.BookingStep2Fragment
 import com.sstudio.otocare.ui.booking.BookingStep3Fragment
 import com.sstudio.otocare.ui.booking.BookingStep4Fragment
 
-class ViePagerAdapter(fm: FragmentManager) : FragmentPagerAdapter(fm) {
+class ViePagerAdapter(fm: FragmentManager) :
+    FragmentStatePagerAdapter(fm, BEHAVIOR_RESUME_ONLY_CURRENT_FRAGMENT) {
     override fun getItem(position: Int): Fragment {
         val bookingStep1Fragment = BookingStep1Fragment()
         val bookingStep2Fragment = BookingStep2Fragment()
         val bookingStep3Fragment = BookingStep3Fragment()
         val bookingStep4Fragment = BookingStep4Fragment()
-        when (position){
+        when (position) {
             0 -> return bookingStep1Fragment.get_nstance()
             1 -> return bookingStep2Fragment.getmInstance()
             2 -> return bookingStep3Fragment.getmInstance()

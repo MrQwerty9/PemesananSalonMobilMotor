@@ -54,7 +54,7 @@
                 app:layout_constraintTop_toBottomOf="@+id/tv_waiting_to_automatically" />
 
         <Button
-                android:id="@+id/wrong_tv"
+                android:id="@+id/tv_wrong_phone"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="Wrong number?"
@@ -74,7 +74,7 @@
                 android:padding="4dp"
                 android:textSize="16sp"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/wrong_tv"
+                app:layout_constraintTop_toBottomOf="@+id/tv_wrong_phone"
                 app:layout_constraintEnd_toEndOf="parent"/>
 
         <EditText

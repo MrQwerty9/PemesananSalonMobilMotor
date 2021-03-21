@@ -1,4 +1,4 @@
-package com.sstudio.otocare.adapter
+package com.sstudio.otocare.ui.booking.adapter
 
 import android.content.Context
 import android.view.LayoutInflater
@@ -9,7 +9,7 @@ import androidx.recyclerview.widget.RecyclerView
 import com.sstudio.core.domain.model.Garage
 import com.sstudio.otocare.databinding.ItemGarageBinding
 
-class GarageAdapter(val context: Context, val bengkelList: List<Garage>) :
+class GarageAdapter(val context: Context, private val garageList: List<Garage>) :
     RecyclerView.Adapter<GarageAdapter.ViewHolder>() {
 
     private val cardViewList: ArrayList<CardView> = ArrayList()
@@ -21,14 +21,14 @@ class GarageAdapter(val context: Context, val bengkelList: List<Garage>) :
     }
 
     override fun getItemCount(): Int {
-        return bengkelList.size
+        return garageList.size
     }
 
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
-        holder.bind(bengkelList[position])
+        holder.bind(garageList[position])
     }
 
-    class ViewHolder(private val binding: ItemGarageBinding) :
+    inner class ViewHolder(private val binding: ItemGarageBinding) :
         RecyclerView.ViewHolder(binding.root) {
 
         fun bind(garage: Garage) {

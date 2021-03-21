@@ -3,7 +3,6 @@ package com.sstudio.otocare.ui.login
 import android.app.AlertDialog
 import android.app.ProgressDialog
 import android.content.Context
-import android.content.DialogInterface
 import android.content.Intent
 import android.os.Bundle
 import android.os.CountDownTimer
@@ -17,8 +16,8 @@ import com.google.firebase.FirebaseException
 import com.google.firebase.FirebaseTooManyRequestsException
 import com.google.firebase.auth.*
 import com.sstudio.otocare.R
+import com.sstudio.otocare.databinding.FragmentVerificationBinding
 import com.sstudio.otocare.ui.home.HomeActivity
-import kotlinx.android.synthetic.main.fragment_verification.*
 import java.util.concurrent.TimeUnit
 
 
@@ -30,8 +29,10 @@ class VerificationFragment : Fragment(), View.OnClickListener {
     private var mResendToken: PhoneAuthProvider.ForceResendingToken? = null
     private var progressDialog: ProgressDialog? = null
     private var isTimerActive = false
-    private var mCounterDown : CountDownTimer? = null
-    private var timeLeft : Long = -1
+    private var mCounterDown: CountDownTimer? = null
+    private var timeLeft: Long = -1
+    private var _binding: FragmentVerificationBinding? = null
+    private val binding get() = _binding!!
 
     companion object {
         const val EXTRA_PHONE_NUMBER = "extra_phone_number"
@@ -43,7 +44,8 @@ class VerificationFragment : Fragment(), View.OnClickListener {
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-        return inflater.inflate(R.layout.fragment_verification, container, false)
+        _binding = FragmentVerificationBinding.inflate(inflater, container, false)
+        return binding.root
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
@@ -66,10 +68,10 @@ class VerificationFragment : Fragment(), View.OnClickListener {
 
     override fun onClick(v: View?) {
         when (v){
-            btn_verification -> {
+            binding.btnVerification -> {
                 // try to enter the code by yourself to handle the case
                 // if user enter another sim card used in another phone ...
-                val code = et_sent_code.text
+                val code = binding.etSentCode.text
                 Log.e("code is --- ", code.toString())
                 if (code != null && code.isNotEmpty() && mVerificationId != null && mVerificationId!!.isNotEmpty()) {
 
@@ -83,7 +85,7 @@ class VerificationFragment : Fragment(), View.OnClickListener {
                 }
             }
 
-            btn_resend -> {
+            binding.btnResend -> {
                 if (mResendToken != null && !isTimerActive) {
                     resendVerificationCode(phoneNumber.toString(), mResendToken)
                     showTimer(60000)
@@ -94,7 +96,7 @@ class VerificationFragment : Fragment(), View.OnClickListener {
 
             }
 
-            wrong_tv -> {
+            binding.tvWrongPhone -> {
                 showLoginActivity()
             }
         }
@@ -171,14 +173,14 @@ class VerificationFragment : Fragment(), View.OnClickListener {
 
             override fun onTick(millisUntilFinished: Long) {
                 timeLeft = millisUntilFinished
-                tv_counter_down.visibility = View.VISIBLE
-                tv_counter_down.text = "seconds remaining: " + millisUntilFinished / 1000
+                binding.tvCounterDown.visibility = View.VISIBLE
+                binding.tvCounterDown.text = "seconds remaining: " + millisUntilFinished / 1000
 
                 //here you can have your logic to set text to edittext
             }
 
             override fun onFinish() {
-                tv_counter_down.visibility  = View.GONE
+                binding.tvCounterDown.visibility = View.GONE
                 isTimerActive = false
             }
 
@@ -197,17 +199,17 @@ class VerificationFragment : Fragment(), View.OnClickListener {
         }
     }
 
-    private fun initView(){
+    private fun initView() {
         // init vars from bundle
         val arguments = arguments
         phoneNumber = arguments?.getString(EXTRA_PHONE_NUMBER)
-        tv_verify.text = "Verfiy $phoneNumber"
-        tv_phone_number.text = phoneNumber
+        binding.tvVerify.text = "Verfiy $phoneNumber"
+        binding.tvPhoneNumber.text = phoneNumber
 
         // init click listener
-        btn_verification.setOnClickListener(this)
-        btn_resend.setOnClickListener(this)
-        wrong_tv.setOnClickListener(this)
+        binding.btnVerification.setOnClickListener(this)
+        binding.btnResend.setOnClickListener(this)
+        binding.tvWrongPhone.setOnClickListener(this)
 
         // init fire base verfiyPhone number callback
         callbacks = object : PhoneAuthProvider.OnVerificationStateChangedCallbacks() {
@@ -234,7 +236,7 @@ class VerificationFragment : Fragment(), View.OnClickListener {
                 val smsMessageSent : String = credential.smsCode.toString()
                 Log.e("the message is ----- ", smsMessageSent)
                 if(smsMessageSent!=null)
-                    et_sent_code.setText(smsMessageSent)
+                    binding.etSentCode.setText(smsMessageSent)
 
                 signInWithPhoneAuthCredential(credential)
             }
@@ -272,7 +274,7 @@ class VerificationFragment : Fragment(), View.OnClickListener {
 
 
                 dismissProgressDialog(progressDialog)
-                tv_counter_down.visibility = View.GONE
+                binding.tvCounterDown.visibility = View.GONE
                 // Save verification ID and resending token so we can use them later
                 Log.e("onCodeSent===", "onCodeSent:$verificationId")
 
@@ -296,11 +298,13 @@ class VerificationFragment : Fragment(), View.OnClickListener {
     private fun notifyUserAndRetry(message: String) {
         val alertDialogBuilder = AlertDialog.Builder(requireContext())
         alertDialogBuilder.setMessage(message)
-        alertDialogBuilder.setPositiveButton("Ok",
-            DialogInterface.OnClickListener { _, _ -> showLoginActivity() })
+        alertDialogBuilder.setPositiveButton(
+            "Ok"
+        ) { _, _ -> showLoginActivity() }
 
-        alertDialogBuilder.setNegativeButton("Cancel",
-            DialogInterface.OnClickListener { _, _ -> showLoginActivity() })
+        alertDialogBuilder.setNegativeButton(
+            "Cancel"
+        ) { _, _ -> showLoginActivity() }
 
         val alertDialog = alertDialogBuilder.create()
         alertDialog.show()

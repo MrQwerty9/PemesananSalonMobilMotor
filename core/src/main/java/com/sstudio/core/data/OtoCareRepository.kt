@@ -1,5 +1,6 @@
 package com.sstudio.core.data
 
+import android.util.Log
 import com.sstudio.core.data.source.remote.RemoteDataSource
 import com.sstudio.core.data.source.remote.network.ApiResponse
 import com.sstudio.core.domain.model.*
@@ -41,11 +42,13 @@ class OtoCareRepository(
             }
         }
 
-    override fun getHomeBanner(): Flow<Resource<List<Banner>>> =
-        flow<Resource<List<Banner>>> {
+    override fun getHomeBanner(): Flow<Resource<List<Banner>>> {
+        Log.d("mytag", "repo banner cek")
+        return flow<Resource<List<Banner>>> {
             emit(Resource.Loading())
             when (val userResponse = remoteDataSource.getHomeBanner().first()) {
                 is ApiResponse.Success -> {
+                    Log.d("mytag", "repo banner ${userResponse.data}")
                     emit(Resource.Success(userResponse.data.map {
                         DataMapper.mapBannerResponseToDomain(it)
                     }))
@@ -57,7 +60,9 @@ class OtoCareRepository(
                     emit(Resource.Error(userResponse.errorMessage))
                 }
             }
+
         }
+    }
 
     override fun getHomeLookBook(): Flow<Resource<List<Banner>>> =
         flow<Resource<List<Banner>>> {

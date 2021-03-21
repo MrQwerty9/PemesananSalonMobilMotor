@@ -1,5 +1,6 @@
 package com.sstudio.core.data.source.remote
 
+import android.util.Log
 import com.google.firebase.firestore.FirebaseFirestore
 import com.sstudio.core.data.Resource
 import com.sstudio.core.data.source.remote.network.ApiResponse
@@ -39,11 +40,14 @@ class RemoteDataSource(private val db: FirebaseFirestore) {
             emit(ApiResponse.Error(it.message.toString()))
         }.flowOn(Dispatchers.IO)
 
-    fun getHomeBanner(): Flow<ApiResponse<List<BannerResponse>>> =
-        flow<ApiResponse<List<BannerResponse>>> {
+    fun getHomeBanner(): Flow<ApiResponse<List<BannerResponse>>> {
+        Log.d("mytag", "remote banner cek")
+        return flow<ApiResponse<List<BannerResponse>>> {
+
             val docRef = db.collection("Banner")
             val banner = docRef.get().await()
             val listBanner = ArrayList<BannerResponse>()
+            Log.d("mytag", "remote banner $banner")
             for (bnr in banner) {
                 listBanner.add(bnr.toObject(BannerResponse::class.java))
             }
@@ -51,6 +55,7 @@ class RemoteDataSource(private val db: FirebaseFirestore) {
         }.catch {
             emit(ApiResponse.Error(it.message.toString()))
         }.flowOn(Dispatchers.IO)
+    }
 
     fun getHomeLookBook(): Flow<ApiResponse<List<BannerResponse>>> =
         flow<ApiResponse<List<BannerResponse>>> {

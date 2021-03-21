@@ -15,7 +15,7 @@ import com.sstudio.otocare.databinding.FragmentHomeBinding
 import com.sstudio.otocare.services.PicassoImageLoadingServices
 import com.sstudio.otocare.ui.booking.BookingActivity
 import com.sstudio.otocare.ui.home.adapter.HomeSliderAdapter
-import com.sstudio.otocare.ui.home.adapter.LookbookAdapter
+import com.sstudio.otocare.ui.home.adapter.LookBookAdapter
 import dmax.dialog.SpotsDialog
 import org.koin.android.viewmodel.ext.android.viewModel
 import ss.com.bannerslider.Slider
@@ -60,7 +60,7 @@ class HomeFragment : Fragment() {
                     resource.data?.let {
                         binding.rvLookbook.setHasFixedSize(true)
                         binding.rvLookbook.layoutManager = LinearLayoutManager(activity)
-                        binding.rvLookbook.adapter = LookbookAdapter(requireActivity(), it)
+                        binding.rvLookbook.adapter = LookBookAdapter(requireActivity(), it)
                     }
                 }
                 is Resource.Error -> {
@@ -72,12 +72,13 @@ class HomeFragment : Fragment() {
     }
 
     private fun loadBanner() {
-        viewModel.getHomeLookBook?.observe(viewLifecycleOwner) { resource ->
+        viewModel.getHomeBanner?.observe(viewLifecycleOwner) { resource ->
             when (resource) {
                 is Resource.Loading -> dialog.show()
                 is Resource.Success -> {
                     dialog.dismiss()
                     resource.data?.let {
+//                        Log.d("mytag", "$it")
                         binding.bannerSliderHome.setAdapter(HomeSliderAdapter(it))
                     }
                 }

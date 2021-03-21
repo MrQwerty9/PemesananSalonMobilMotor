@@ -1,6 +1,6 @@
 package com.sstudio.otocare.common
 
-import com.sstudio.core.domain.model.Bengkel
+import com.sstudio.core.domain.model.Garage
 import java.text.SimpleDateFormat
 import java.util.*
 
@@ -14,7 +14,7 @@ object Common {
     var step: Int = 0
     var city: String = ""
     val KEY_BENGKEL_LOAD_DONE: String = "BENGKEL_LOAD_DONE"
-    var currentBengkel: com.sstudio.core.domain.model.Bengkel? = null
+    var currentBengkel: Garage? = null
     val KEY_DISPLAY_TIME_SLOT: String = "DISPLAY_TIMA_SLOT"
     val KEY_STEP:String = "STEP"
     val KEY_BENGKEL_SELECTED: String = "BENGKEL_SELECTED"

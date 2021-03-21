@@ -10,42 +10,24 @@ import android.view.ViewGroup
 import android.widget.Toast
 import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.GridLayoutManager
-import androidx.recyclerview.widget.RecyclerView
-import com.google.firebase.firestore.CollectionReference
-import com.google.firebase.firestore.FirebaseFirestore
-import com.sstudio.otocare.R
-import com.sstudio.otocare.adapter.MySalonAdapter
 import com.sstudio.otocare.common.Common
 import com.sstudio.otocare.common.SpaceItemDecoration
+import com.sstudio.otocare.databinding.FragmentBookingStepOneBinding
 import com.sstudio.otocare.listener.IAllSalonLoadListener
 import com.sstudio.otocare.listener.IBranchLoadListener
+import com.sstudio.otocare.ui.booking.adapter.SalonAdapter
 import dmax.dialog.SpotsDialog
-import kotlinx.android.synthetic.main.fragment_booking_step_one.*
-import kotlinx.android.synthetic.main.fragment_booking_step_one.view.*
 
-/**
- * A simple [Fragment] subclass.
- *
- */
 class BookingStep1Fragment : Fragment(), IAllSalonLoadListener, IBranchLoadListener {
 
-    lateinit var allSalonRef: CollectionReference
-    lateinit var branchRef: CollectionReference
-    lateinit var iAllSalonLoadListener : IAllSalonLoadListener
+    //    lateinit var allSalonRef: CollectionReference
+//    lateinit var branchRef: CollectionReference
+    lateinit var iAllSalonLoadListener: IAllSalonLoadListener
     lateinit var iBranchLoadListener: IBranchLoadListener
     lateinit var dialog: AlertDialog
-    lateinit var rv_booking: RecyclerView
     var mInstance: BookingStep1Fragment? = null
-
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-
-        allSalonRef = FirebaseFirestore.getInstance().collection("Cabang")
-        iAllSalonLoadListener = this
-        iBranchLoadListener = this
-        dialog = SpotsDialog.Builder().setContext(activity).setCancelable(false).build()
-        
-    }
+    private var _binding: FragmentBookingStepOneBinding? = null
+    private val binding get() = _binding!!
 
     fun get_nstance(): BookingStep1Fragment {
         if (mInstance == null)
@@ -57,69 +39,75 @@ class BookingStep1Fragment : Fragment(), IAllSalonLoadListener, IBranchLoadListe
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
+        _binding = FragmentBookingStepOneBinding.inflate(inflater, container, false)
+        return binding.root
 
-        val thisView = inflater.inflate(R.layout.fragment_booking_step_one, container,false)
-        rv_booking = thisView.rv_booking_step_one
+    }
+
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
+        //        allSalonRef = FirebaseFirestore.getInstance().collection("Cabang")
+        iAllSalonLoadListener = this
+        iBranchLoadListener = this
+        dialog = SpotsDialog.Builder().setContext(activity).setCancelable(false).build()
+
         initView()
         loadAllSalon()
-
-        return thisView
-
     }
 
     private fun initView() {
-        rv_booking.setHasFixedSize(true)
-        rv_booking.layoutManager = GridLayoutManager(activity, 2)
-        rv_booking.addItemDecoration(SpaceItemDecoration(4))
+        binding.rvBookingStepOne.setHasFixedSize(true)
+        binding.rvBookingStepOne.layoutManager = GridLayoutManager(activity, 2)
+        binding.rvBookingStepOne.addItemDecoration(SpaceItemDecoration(4))
     }
 
     private fun loadAllSalon() {
-        allSalonRef.get()
-            .addOnCompleteListener { task ->
-                if (task.isSuccessful) {
-                    val list = ArrayList<String>()
-                    list.add("Silahkan pilih kota")
-                    for (queryDocumentSnapshot in task.result!!) {
-                        list.add(queryDocumentSnapshot.id)
-                    }
-                    iAllSalonLoadListener.onAllSalonLoadSuccess(list)
-                }
-            }.addOnFailureListener { e -> iAllSalonLoadListener.onAllSalonLoadFailed(e.message!!) }
+//        allSalonRef.get()
+//            .addOnCompleteListener { task ->
+//                if (task.isSuccessful) {
+//                    val list = ArrayList<String>()
+//                    list.add("Silahkan pilih kota")
+//                    for (queryDocumentSnapshot in task.result!!) {
+//                        list.add(queryDocumentSnapshot.id)
+//                    }
+//                    iAllSalonLoadListener.onAllSalonLoadSuccess(list)
+//                }
+//            }.addOnFailureListener { e -> iAllSalonLoadListener.onAllSalonLoadFailed(e.message!!) }
     }
 
     override fun onAllSalonLoadSuccess(areaNameList: List<String>) {
-        spin_booking_step_one.setItems(areaNameList)
-        spin_booking_step_one.setOnItemSelectedListener { view, position, id, item ->
+        binding.spinBookingStepOne.setItems(areaNameList)
+        binding.spinBookingStepOne.setOnItemSelectedListener { view, position, id, item ->
             if (position > 0)
                 loadBranchOfCity(item.toString())
             else
-                rv_booking.visibility = View.GONE
+                binding.rvBookingStepOne.visibility = View.GONE
         }
     }
 
     private fun loadBranchOfCity(cityName: String) {
         dialog.show()
         Common.city = cityName
-        branchRef = FirebaseFirestore.getInstance()
-            .collection("Cabang")
-            .document(cityName)
-            .collection("Branch")
-
-        branchRef.get().addOnCompleteListener { task ->
-            val list = ArrayList<com.sstudio.core.domain.model.Salon>()
-            if (task.isSuccessful){
-                for (queryDocumentSnapshot in task.result!!) {
-                    val salon =
-                        queryDocumentSnapshot.toObject(com.sstudio.core.domain.model.Salon::class.java)
-                    salon.salonId = queryDocumentSnapshot.id
-                    list.add(salon)
-                }
-
-                iBranchLoadListener.onBranchLoadSuccess(list)
-            }
-        }.addOnFailureListener {
-            iBranchLoadListener.onBranchLoadFailed(it.message!!)
-        }
+//        branchRef = FirebaseFirestore.getInstance()
+//            .collection("Cabang")
+//            .document(cityName)
+//            .collection("Branch")
+//
+//        branchRef.get().addOnCompleteListener { task ->
+//            val list = ArrayList<com.sstudio.core.domain.model.Salon>()
+//            if (task.isSuccessful){
+//                for (queryDocumentSnapshot in task.result!!) {
+//                    val salon =
+//                        queryDocumentSnapshot.toObject(com.sstudio.core.domain.model.Salon::class.java)
+//                    salon.salonId = queryDocumentSnapshot.id
+//                    list.add(salon)
+//                }
+//
+//                iBranchLoadListener.onBranchLoadSuccess(list)
+//            }
+//        }.addOnFailureListener {
+//            iBranchLoadListener.onBranchLoadFailed(it.message!!)
+//        }
     }
 
     override fun onAllSalonLoadFailed(message: String) {
@@ -127,9 +115,9 @@ class BookingStep1Fragment : Fragment(), IAllSalonLoadListener, IBranchLoadListe
     }
 
     override fun onBranchLoadSuccess(salonList: List<com.sstudio.core.domain.model.Salon>) {
-        val adapter = MySalonAdapter(this.activity!!, salonList)
-        rv_booking.adapter = adapter
-        rv_booking.visibility = View.VISIBLE
+        val adapter = SalonAdapter(requireActivity(), salonList)
+        binding.rvBookingStepOne.adapter = adapter
+        binding.rvBookingStepOne.visibility = View.VISIBLE
 
         dialog.dismiss()
     }
