@@ -16,17 +16,18 @@ object DataMapper {
             image = input.image
         )
 
-    fun mapGarageResponseToDomain(input: GarageResponse): Garage =
-        Garage(
-            name = input.name,
+    fun mapPackageResponseToDomain(input: PackageResponse): Package =
+        Package(
             id = input.id,
-            username = input.username,
-            password = input.password,
-            rating = input.rating
+            name = input.name,
+            include = input.include,
+            price = input.price,
+            popular = input.popular,
+            image = input.image
         )
 
-    fun mapSalonResponseToDomain(input: SalonResponse): Salon =
-        Salon(
+    fun mapGarageResponseToDomain(input: GarageResponse): Garage =
+        Garage(
             name = input.name,
             address = input.address,
             phone = input.phone,
@@ -37,5 +38,11 @@ object DataMapper {
     fun mapTimeSlotResponseToDomain(input: TimeSlotResponse): TimeSlot =
         TimeSlot(
             slot = input.slot
+        )
+
+    fun mapCityResponseToDomain(input: CityResponse): City =
+        City(
+            id = input.id,
+            name = input.name
         )
 }

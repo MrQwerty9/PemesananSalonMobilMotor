@@ -43,12 +43,10 @@ class OtoCareRepository(
         }
 
     override fun getHomeBanner(): Flow<Resource<List<Banner>>> {
-        Log.d("mytag", "repo banner cek")
         return flow<Resource<List<Banner>>> {
             emit(Resource.Loading())
             when (val userResponse = remoteDataSource.getHomeBanner().first()) {
                 is ApiResponse.Success -> {
-                    Log.d("mytag", "repo banner ${userResponse.data}")
                     emit(Resource.Success(userResponse.data.map {
                         DataMapper.mapBannerResponseToDomain(it)
                     }))
@@ -82,19 +80,67 @@ class OtoCareRepository(
             }
         }
 
-    override fun getAllGarage(): Flow<Resource<List<Garage>>> {
+    override fun getAllPackage(): Flow<Resource<List<Package>>> {
+        return flow<Resource<List<Package>>> {
+            emit(Resource.Loading())
+            when (val response = remoteDataSource.getAllPackage().first()) {
+                is ApiResponse.Success -> {
+                    emit(Resource.Success(response.data.map {
+                        Log.d("mytag", "repo ${it}")
+                        DataMapper.mapPackageResponseToDomain(it)
+                    }))
+                }
+                is ApiResponse.Empty -> {
+                    emit(Resource.Success(listOf()))
+                }
+                is ApiResponse.Error -> {
+                    emit(Resource.Error(response.errorMessage))
+                }
+            }
+        }
+    }
+
+    override fun getTeam(id: String): Flow<Resource<Package>> {
         return flow { }
     }
+
+    override fun getAllCityOfGarage(): Flow<Resource<List<City>>> =
+        flow<Resource<List<City>>> {
+            emit(Resource.Loading())
+            when (val response = remoteDataSource.getAllCityOfGarage().first()) {
+                is ApiResponse.Success -> {
+                    emit(Resource.Success(response.data.map {
+                        DataMapper.mapCityResponseToDomain(it)
+                    }))
+                }
+                is ApiResponse.Empty -> {
+                    emit(Resource.Success(listOf()))
+                }
+                is ApiResponse.Error -> {
+                    emit(Resource.Error(response.errorMessage))
+                }
+            }
+        }
+
+    override fun getBranchOfCity(city: String): Flow<Resource<List<Garage>>> =
+        flow<Resource<List<Garage>>> {
+            emit(Resource.Loading())
+            when (val response = remoteDataSource.getBranchOfCity(city).first()) {
+                is ApiResponse.Success -> {
+                    emit(Resource.Success(response.data.map {
+                        DataMapper.mapGarageResponseToDomain(it)
+                    }))
+                }
+                is ApiResponse.Empty -> {
+                    emit(Resource.Success(listOf()))
+                }
+                is ApiResponse.Error -> {
+                    emit(Resource.Error(response.errorMessage))
+                }
+            }
+        }
 
     override fun getGarage(id: String): Flow<Resource<Garage>> {
-        return flow { }
-    }
-
-    override fun getAllSalon(): Flow<Resource<List<Salon>>> {
-        return flow { }
-    }
-
-    override fun getSalon(id: String): Flow<Resource<Salon>> {
         return flow { }
     }
 

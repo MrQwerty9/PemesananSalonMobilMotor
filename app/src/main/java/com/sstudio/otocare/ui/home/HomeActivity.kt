@@ -5,6 +5,7 @@ import android.content.Intent
 import android.os.Bundle
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
+import androidx.lifecycle.MutableLiveData
 import androidx.navigation.NavController
 import androidx.navigation.findNavController
 import androidx.navigation.ui.NavigationUI
@@ -28,7 +29,7 @@ class HomeActivity : AppCompatActivity() {
     private val viewModel: HomeViewModel by viewModel()
 
     companion object {
-        var currentUser: User? = null
+        var currentUser: MutableLiveData<User> = MutableLiveData()
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -41,11 +42,13 @@ class HomeActivity : AppCompatActivity() {
         dialog.show()
         checkCurrentUser()
 
-        val navController: NavController = findNavController(R.id.fragment_nav_host)
-        NavigationUI.setupWithNavController(
-            binding.bottomNav,
-            navController
-        )
+        if (savedInstanceState == null) {
+            val navController: NavController = findNavController(R.id.fragment_nav_host)
+            NavigationUI.setupWithNavController(
+                binding.bottomNav,
+                navController
+            )
+        }
     }
 
     private fun checkCurrentUser() {
@@ -59,7 +62,7 @@ class HomeActivity : AppCompatActivity() {
                     is Resource.Success -> {
                         dialog.dismiss()
                         resource.data?.let {
-                            currentUser = it
+                            currentUser.value = it
                             if (it == User()) {
                                 showUpdateDialog(userPhone)
                             }
@@ -100,8 +103,9 @@ class HomeActivity : AppCompatActivity() {
                     is Resource.Loading -> dialog.show()
                     is Resource.Success -> {
                         dialog.dismiss()
+                        bottomSheetDialog.dismiss()
                         resource.data?.let {
-                            currentUser = user
+                            currentUser.value = user
                         }
                     }
                     is Resource.Error -> {

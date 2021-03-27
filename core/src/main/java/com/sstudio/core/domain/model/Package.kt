@@ -4,10 +4,11 @@ import android.os.Parcelable
 import kotlinx.parcelize.Parcelize
 
 @Parcelize
-class Garage(
+data class Package(
     var id: String = "",
     var name: String = "",
-    var address: String = "",
-    var phone: String = "",
-    var time: String = ""
+    var include: List<String> = listOf(),
+    var price: Double = 0.0,
+    var popular: Boolean = false,
+    var image: String = ""
 ) : Parcelable

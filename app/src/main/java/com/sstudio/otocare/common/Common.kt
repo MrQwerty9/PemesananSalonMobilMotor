@@ -1,6 +1,6 @@
 package com.sstudio.otocare.common
 
-import com.sstudio.core.domain.model.Garage
+import com.sstudio.core.domain.model.Package
 import java.text.SimpleDateFormat
 import java.util.*
 
@@ -10,11 +10,11 @@ object Common {
     var currentUser: com.sstudio.core.domain.model.User? = null
     var KEY_ENABLE_BUTTON_NEXT: String = "ENABLE_BUTTON_NEXT"
     var KEY_SALON_STORE = "SALON_SAVE"
-    var currentSalon: com.sstudio.core.domain.model.Salon? = null
+    var currentGarage: com.sstudio.core.domain.model.Garage? = null
     var step: Int = 0
     var city: String = ""
     val KEY_BENGKEL_LOAD_DONE: String = "BENGKEL_LOAD_DONE"
-    var currentBengkel: Garage? = null
+    var currentBengkel: Package? = null
     val KEY_DISPLAY_TIME_SLOT: String = "DISPLAY_TIMA_SLOT"
     val KEY_STEP:String = "STEP"
     val KEY_BENGKEL_SELECTED: String = "BENGKEL_SELECTED"

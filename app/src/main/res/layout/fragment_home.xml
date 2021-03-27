@@ -18,13 +18,14 @@
         <ImageView
                 android:src="@drawable/ic_account_circle_white_24dp"
                 android:layout_width="60dp"
-                android:layout_height="60dp" />
+                android:layout_height="60dp"
+                tools:ignore="contentDescription" />
 
         <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:orientation="vertical"
-                android:layout_marginLeft="8dp">
+                android:layout_marginStart="8dp">
 
             <TextView
                     android:id="@+id/tv_user_name"
@@ -32,7 +33,7 @@
                     android:textColor="@color/putih"
                     android:textSize="22sp"
                     android:layout_width="match_parent"
-                    android:layout_height="wrap_content"/>
+                    android:layout_height="wrap_content" />
 
             <TextView
                     android:id="@+id/tv_member_type"
@@ -87,7 +88,7 @@
 
         <androidx.cardview.widget.CardView
                 android:id="@+id/cv_cart"
-                android:layout_marginRight="8dp"
+                android:layout_marginEnd="8dp"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_weight="1">
@@ -118,7 +119,7 @@
 
         <androidx.cardview.widget.CardView
                 android:id="@+id/cv_history"
-                android:layout_marginRight="8dp"
+                android:layout_marginEnd="8dp"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_weight="1">
@@ -149,7 +150,7 @@
 
         <androidx.cardview.widget.CardView
                 android:id="@+id/cv_notification"
-                android:layout_marginRight="8dp"
+                android:layout_marginEnd="8dp"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_weight="1">
@@ -183,34 +184,21 @@
     <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:orientation="vertical">
+            android:orientation="vertical"
+            android:background="@color/dark_grey">
 
         <ss.com.bannerslider.Slider
                 android:id="@+id/banner_slider_home"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content" />
 
-        <RelativeLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:padding="2dp">
-
-            <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:gravity="center_vertical"
-                    android:text="Look Book"
-                    android:textColor="@color/button1"
-                    android:textSize="18sp"/>
-
-        </RelativeLayout>
-
         <androidx.recyclerview.widget.RecyclerView
                 android:id="@+id/rv_lookbook"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center_vertical"
-                android:orientation="horizontal">
+                android:orientation="horizontal"
+                tools:listitem="@layout/item_lookbook">
 
         </androidx.recyclerview.widget.RecyclerView>
 

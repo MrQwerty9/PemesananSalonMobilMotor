@@ -18,17 +18,20 @@ class OtoCareInteractor(private val iOtoCareRepository: IOtoCareRepository) : Ot
     override fun getHomeLookBook(): Flow<Resource<List<Banner>>> =
         iOtoCareRepository.getHomeLookBook()
 
-    override fun getAllGarage(): Flow<Resource<List<Garage>>> =
-        iOtoCareRepository.getAllGarage()
+    override fun getAllPackage(): Flow<Resource<List<Package>>> =
+        iOtoCareRepository.getAllPackage()
+
+    override fun getTeam(id: String): Flow<Resource<Package>> =
+        iOtoCareRepository.getTeam(id)
+
+    override fun getAllCityOfGarage(): Flow<Resource<List<City>>> =
+        iOtoCareRepository.getAllCityOfGarage()
+
+    override fun getBranchOfCity(city: String): Flow<Resource<List<Garage>>> =
+        iOtoCareRepository.getBranchOfCity(city)
 
     override fun getGarage(id: String): Flow<Resource<Garage>> =
         iOtoCareRepository.getGarage(id)
-
-    override fun getAllSalon(): Flow<Resource<List<Salon>>> =
-        iOtoCareRepository.getAllSalon()
-
-    override fun getSalon(id: String): Flow<Resource<Salon>> =
-        iOtoCareRepository.getSalon(id)
 
     override fun setBooking(booking: Booking) =
         iOtoCareRepository.setBooking(booking)

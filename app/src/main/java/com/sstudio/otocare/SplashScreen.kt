@@ -1,9 +1,9 @@
 package com.sstudio.otocare
 
 import android.content.Intent
-import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.os.Handler
+import androidx.appcompat.app.AppCompatActivity
 import com.sstudio.otocare.ui.login.LoginActivity
 
 class SplashScreen : AppCompatActivity() {
@@ -15,6 +15,6 @@ class SplashScreen : AppCompatActivity() {
             val intent = Intent(this@SplashScreen, LoginActivity::class.java)
             startActivity(intent)
             finish()
-        }, 3000)
+        }, 1000)
     }
 }

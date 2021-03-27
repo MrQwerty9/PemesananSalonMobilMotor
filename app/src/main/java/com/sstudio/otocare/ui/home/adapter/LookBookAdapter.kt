@@ -21,7 +21,7 @@ class LookBookAdapter(
     override fun getItemCount(): Int = lookbook.size
 
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
-        Picasso.get().load(lookbook.get(position).image).into(holder.imageView)
+        Picasso.get().load(lookbook[position].image).into(holder.imageView)
     }
 
     inner class ViewHolder(binding: ItemLookbookBinding) : RecyclerView.ViewHolder(binding.root) {

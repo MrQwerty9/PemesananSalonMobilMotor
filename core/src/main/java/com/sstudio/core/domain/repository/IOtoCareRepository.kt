@@ -11,11 +11,12 @@ interface IOtoCareRepository {
     fun getHomeBanner(): Flow<Resource<List<Banner>>>
     fun getHomeLookBook(): Flow<Resource<List<Banner>>>
 
-    fun getAllGarage(): Flow<Resource<List<Garage>>>
-    fun getGarage(id: String): Flow<Resource<Garage>>
+    fun getAllPackage(): Flow<Resource<List<Package>>>
+    fun getTeam(id: String): Flow<Resource<Package>>
 
-    fun getAllSalon(): Flow<Resource<List<Salon>>>
-    fun getSalon(id: String): Flow<Resource<Salon>>
+    fun getAllCityOfGarage(): Flow<Resource<List<City>>>
+    fun getBranchOfCity(city: String): Flow<Resource<List<Garage>>>
+    fun getGarage(id: String): Flow<Resource<Garage>>
 
     fun setBooking(booking: Booking)
 }

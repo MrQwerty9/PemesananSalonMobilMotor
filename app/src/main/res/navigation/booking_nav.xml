@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="utf-8"?>
+<navigation xmlns:android="http://schemas.android.com/apk/res/android"
+        xmlns:app="http://schemas.android.com/apk/res-auto"
+        android:id="@+id/booking_nav"
+        app:startDestination="@id/fragment_booking_step_one">
+    <fragment
+            android:id="@+id/fragment_booking_step_one"
+            android:name="com.sstudio.otocare.ui.booking.BookingStep1Fragment">
+        <action
+                android:id="@+id/action_goto_step_two"
+                app:destination="@+id/fragment_booking_step_two" />
+        <argument
+                android:name="booking"
+                app:argType="com.sstudio.core.domain.model.Booking" />
+    </fragment>
+    <fragment
+            android:id="@+id/fragment_booking_step_two"
+            android:name="com.sstudio.otocare.ui.booking.BookingStep2Fragment">
+        <action
+                android:id="@+id/action_goto_step_three"
+                app:destination="@+id/fragment_booking_step_three" />
+        <argument
+                android:name="booking"
+                app:argType="com.sstudio.core.domain.model.Booking" />
+    </fragment>
+    <fragment
+            android:id="@+id/fragment_booking_step_three"
+            android:name="com.sstudio.otocare.ui.booking.BookingStep3Fragment">
+        <action
+                android:id="@+id/action_goto_step_four"
+                app:destination="@+id/fragment_booking_step_four" />
+        <argument
+                android:name="booking"
+                app:argType="com.sstudio.core.domain.model.Booking" />
+    </fragment>
+    <fragment
+            android:id="@+id/fragment_booking_step_four"
+            android:name="com.sstudio.otocare.ui.booking.BookingStep4Fragment">
+        <argument
+                android:name="booking"
+                app:argType="com.sstudio.core.domain.model.Booking" />
+    </fragment>
+
+</navigation>

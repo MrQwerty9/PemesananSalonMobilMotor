@@ -5,14 +5,12 @@ import android.app.AlertDialog
 import android.content.BroadcastReceiver
 import android.content.Context
 import android.content.Intent
-import android.content.IntentFilter
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
 import androidx.fragment.app.Fragment
-import androidx.localbroadcastmanager.content.LocalBroadcastManager
 import androidx.recyclerview.widget.GridLayoutManager
 import com.sstudio.otocare.R
 import com.sstudio.otocare.common.Common
@@ -33,32 +31,28 @@ class BookingStep3Fragment : Fragment(), ITimeSlotLoadListener {
     //    private lateinit var bengkelDoo: DocumentReference
     private lateinit var iTimeSlotLoadListener: ITimeSlotLoadListener
     private lateinit var dialog: AlertDialog
-    private lateinit var localBroadcastManager: LocalBroadcastManager
     private lateinit var simpleDateFormat: SimpleDateFormat
     private var _binding: FragmentBookingStepThreeBinding? = null
     private val binding get() = _binding!!
 
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
+    override fun onCreateView(
+        inflater: LayoutInflater, container: ViewGroup?,
+        savedInstanceState: Bundle?
+    ): View {
+        _binding = FragmentBookingStepThreeBinding.inflate(inflater, container, false)
+        return binding.root
+    }
 
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
+
+        initView()
         iTimeSlotLoadListener = this
-        localBroadcastManager = LocalBroadcastManager.getInstance(requireContext())
-        localBroadcastManager.registerReceiver(
-            displayTimeSlot,
-            IntentFilter(Common.KEY_DISPLAY_TIME_SLOT)
-        )
-
         simpleDateFormat = SimpleDateFormat("dd_MM_yyyy")
-
         dialog = SpotsDialog.Builder().setContext(context).setCancelable(false).build()
     }
 
-    override fun onDestroy() {
-        super.onDestroy()
-        localBroadcastManager.unregisterReceiver(displayTimeSlot)
-    }
-
-    private val displayTimeSlot = object : BroadcastReceiver(){
+    private val displayTimeSlot = object : BroadcastReceiver() {
         override fun onReceive(p0: Context?, p1: Intent?) {
             val date = Calendar.getInstance()
             date.add(Calendar.DATE, 0) //add current date
@@ -119,22 +113,7 @@ class BookingStep3Fragment : Fragment(), ITimeSlotLoadListener {
 //        }
     }
 
-    fun getmInstance(): BookingStep3Fragment {
-        if (mInstance == null)
-            mInstance = BookingStep3Fragment()
-        return mInstance!!
-    }
-
-    override fun onCreateView(
-        inflater: LayoutInflater, container: ViewGroup?,
-        savedInstanceState: Bundle?
-    ): View? {
-        val itemView = inflater.inflate(R.layout.fragment_booking_step_three, container, false)
-        initView(itemView)
-        return itemView
-    }
-
-    private fun initView(itemView: View) {
+    private fun initView() {
         binding.rvTimeSlotStep3.setHasFixedSize(true)
         val gridLayoutManager = GridLayoutManager(requireActivity(), 3)
         binding.rvTimeSlotStep3.layoutManager = gridLayoutManager
@@ -145,7 +124,7 @@ class BookingStep3Fragment : Fragment(), ITimeSlotLoadListener {
         val endDate = Calendar.getInstance()
         endDate.add(Calendar.DATE, 2)
 
-        val horizontalCalendar = HorizontalCalendar.Builder(itemView, R.id.calendar_step3)
+        val horizontalCalendar = HorizontalCalendar.Builder(requireActivity(), R.id.calendar_step3)
             .range(startDate, endDate)
             .datesNumberOnScreen(1)
             .mode(HorizontalCalendar.Mode.DAYS)

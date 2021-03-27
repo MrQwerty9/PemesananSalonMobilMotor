@@ -1,9 +1,10 @@
 package com.sstudio.otocare.ui.home.adapter
 
+import com.sstudio.core.domain.model.Banner
 import ss.com.bannerslider.adapters.SliderAdapter
 import ss.com.bannerslider.viewholder.ImageSlideViewHolder
 
-class HomeSliderAdapter(val bannerList: List<com.sstudio.core.domain.model.Banner>) :
+class HomeSliderAdapter(private val bannerList: List<Banner>) :
     SliderAdapter() {
 
     override fun getItemCount(): Int {
@@ -11,6 +12,6 @@ class HomeSliderAdapter(val bannerList: List<com.sstudio.core.domain.model.Banne
     }
 
     override fun onBindImageSlide(position: Int, imageSlideViewHolder: ImageSlideViewHolder?) {
-        imageSlideViewHolder!!.bindImageSlide(bannerList.get(position).image)
+        imageSlideViewHolder!!.bindImageSlide(bannerList[position].image)
     }
 }

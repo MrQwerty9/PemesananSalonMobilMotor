@@ -30,7 +30,7 @@ class BookingStep4Fragment : Fragment() {
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
-    ): View? {
+    ): View {
         _binding = FragmentBookingStepFourBinding.inflate(inflater, container, false)
         return binding.root
     }
@@ -49,13 +49,13 @@ class BookingStep4Fragment : Fragment() {
 
             //booking informasi
             Log.d("mytag", "klik")
-            booking.garage.id = Common.currentBengkel!!.id
-            booking.garage.name = Common.currentBengkel!!.name
+            booking.pkg.id = Common.currentBengkel!!.id
+            booking.pkg.name = Common.currentBengkel!!.name
             booking.customer.name = Common.currentUser!!.name
             booking.customer.phoneNumber = Common.currentUser!!.phoneNumber
-            booking.salon.id = Common.currentSalon!!.id
-            booking.salon.address = Common.currentSalon!!.address
-            booking.salon.name = Common.currentSalon!!.name
+            booking.garage.id = Common.currentGarage!!.id
+            booking.garage.address = Common.currentGarage!!.address
+            booking.garage.name = Common.currentGarage!!.name
             booking.slot = Common.currentTimeSlot.toLong()
             booking.time =
                 StringBuilder(Common.convertTimeSlotToString(Common.currentTimeSlot))
@@ -94,7 +94,7 @@ class BookingStep4Fragment : Fragment() {
     private fun resetStaticData() {
         Common.step = 0
         Common.currentTimeSlot = -1
-        Common.currentSalon = null
+        Common.currentGarage = null
         Common.currentBengkel = null
         Common.currentDate.add(Calendar.DATE, 0) //current date
     }
@@ -110,8 +110,8 @@ class BookingStep4Fragment : Fragment() {
         binding.tvTime.text = StringBuilder(Common.convertTimeSlotToString(Common.currentTimeSlot))
             .append(" " + simpleDateFormat.format(Common.currentDate.time))
         binding.tvBookingTechnician.text = Common.currentBengkel?.name
-        binding.tvPhone.text = Common.currentSalon?.phone
-        binding.tvSalonName.text = Common.currentSalon?.name
+        binding.tvPhone.text = Common.currentGarage?.phone
+        binding.tvGarageName.text = Common.currentGarage?.name
     }
 
 }

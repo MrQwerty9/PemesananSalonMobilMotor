@@ -11,6 +11,7 @@ import android.widget.Toast
 import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.sstudio.core.data.Resource
+import com.sstudio.core.domain.model.User
 import com.sstudio.otocare.databinding.FragmentHomeBinding
 import com.sstudio.otocare.services.PicassoImageLoadingServices
 import com.sstudio.otocare.ui.booking.BookingActivity
@@ -26,11 +27,12 @@ class HomeFragment : Fragment() {
     private var _binding: FragmentHomeBinding? = null
     private val binding get() = _binding!!
     private lateinit var dialog: AlertDialog
+    private var currentUser = User()
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
-    ): View? {
+    ): View {
         // Inflate the layout for this fragment
         _binding = FragmentHomeBinding.inflate(inflater, container, false)
         return binding.root
@@ -47,7 +49,9 @@ class HomeFragment : Fragment() {
         dialog = SpotsDialog.Builder().setContext(requireContext()).setCancelable(false).build()
 
         binding.cvBooking.setOnClickListener {
-            startActivity(Intent(activity, BookingActivity::class.java))
+            val intent = Intent(activity, BookingActivity::class.java)
+            intent.putExtra(BookingActivity.EXTRA_USER, currentUser)
+            startActivity(intent)
         }
     }
 
@@ -91,6 +95,9 @@ class HomeFragment : Fragment() {
     }
 
     private fun setUserInformation() {
-        binding.tvUserName.text = HomeActivity.currentUser?.name
+        HomeActivity.currentUser.observe(viewLifecycleOwner) {
+            binding.tvUserName.text = it.name
+            currentUser = it
+        }
     }
 }
