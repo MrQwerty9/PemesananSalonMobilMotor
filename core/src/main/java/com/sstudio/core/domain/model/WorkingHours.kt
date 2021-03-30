@@ -4,8 +4,7 @@ import android.os.Parcelable
 import kotlinx.parcelize.Parcelize
 
 @Parcelize
-class TimeSlot(
+class WorkingHours(
     var id: Int = 0,
-    var timeSlot: String = "",
-    var available: Boolean = true
+    var time: String = ""
 ) : Parcelable

@@ -35,14 +35,30 @@ object DataMapper {
             id = input.id
         )
 
+    fun mapWorkingHoursResponseToDomain(input: WorkingHoursResponse): TimeSlot =
+        TimeSlot(
+            timeSlot = input.time,
+            id = input.id,
+            available = false
+        )
+
     fun mapTimeSlotResponseToDomain(input: TimeSlotResponse): TimeSlot =
         TimeSlot(
-            slot = input.slot
+            timeSlot = input.slot.toString()
         )
 
     fun mapCityResponseToDomain(input: CityResponse): City =
         City(
             id = input.id,
             name = input.name
+        )
+
+    fun mapBookingToBookingResponse(input: Booking): BookingResponse =
+        BookingResponse(
+            customerId = input.customer.phoneNumber,
+            date = input.date,
+            garageId = input.garage.id,
+            packageId = input.pkg.id,
+            timeSlotId = input.timeSlot.id.toString()
         )
 }

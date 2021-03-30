@@ -6,9 +6,8 @@ import com.sstudio.core.data.source.remote.network.ApiResponse
 import com.sstudio.core.domain.model.*
 import com.sstudio.core.domain.repository.IOtoCareRepository
 import com.sstudio.core.utils.DataMapper
-import kotlinx.coroutines.flow.Flow
-import kotlinx.coroutines.flow.first
-import kotlinx.coroutines.flow.flow
+import kotlinx.coroutines.ExperimentalCoroutinesApi
+import kotlinx.coroutines.flow.*
 
 class OtoCareRepository(
     private val remoteDataSource: RemoteDataSource
@@ -122,29 +121,80 @@ class OtoCareRepository(
             }
         }
 
+    @ExperimentalCoroutinesApi
     override fun getBranchOfCity(city: String): Flow<Resource<List<Garage>>> =
         flow<Resource<List<Garage>>> {
             emit(Resource.Loading())
-            when (val response = remoteDataSource.getBranchOfCity(city).first()) {
-                is ApiResponse.Success -> {
-                    emit(Resource.Success(response.data.map {
-                        DataMapper.mapGarageResponseToDomain(it)
-                    }))
-                }
-                is ApiResponse.Empty -> {
-                    emit(Resource.Success(listOf()))
-                }
-                is ApiResponse.Error -> {
-                    emit(Resource.Error(response.errorMessage))
+            emitAll(remoteDataSource.getBranchOfCity(city).map { response ->
+                when (response) {
+                    is ApiResponse.Success -> {
+                        Resource.Success(response.data.map {
+                            DataMapper.mapGarageResponseToDomain(it)
+                        })
+                    }
+                    is ApiResponse.Empty -> {
+                        Resource.Success(listOf())
+                    }
+                    is ApiResponse.Error -> {
+                        Resource.Error(response.errorMessage)
+                    }
                 }
             }
+            )
         }
 
     override fun getGarage(id: String): Flow<Resource<Garage>> {
         return flow { }
     }
 
-    override fun setBooking(booking: Booking) {
-
+    @ExperimentalCoroutinesApi
+    override fun getTimeSlot(date: String, garageId: String): Flow<Resource<List<TimeSlot>>> {
+        return flow<Resource<List<TimeSlot>>> {
+            emit(Resource.Loading())
+            when (val response = remoteDataSource.getWorkingHours().first()) {
+                is ApiResponse.Success -> {
+                    val data = response.data.map {
+                        DataMapper.mapWorkingHoursResponseToDomain(it)
+                    }
+                    emitAll(
+                        remoteDataSource.getTimeSlotBooked(date, garageId).map { responseTimeSlot ->
+                            when (responseTimeSlot) {
+                                is ApiResponse.Success -> {
+                                    val bookedTimeSlot = responseTimeSlot.data
+                                    for (i in data) {
+                                        i.available = !bookedTimeSlot.contains(i.id.toString())
+                                    }
+                                    Resource.Success(data)
+                                }
+                                is ApiResponse.Empty ->
+                                    Resource.Success(listOf())
+                                is ApiResponse.Error ->
+                                    Resource.Error(responseTimeSlot.errorMessage)
+                            }
+                        })
+                }
+                is ApiResponse.Empty -> {
+                    Resource.Success<List<TimeSlot>>(listOf())
+                }
+                is ApiResponse.Error -> {
+                    Resource.Error<List<TimeSlot>>(response.errorMessage)
+                }
+            }
+        }
     }
+
+    override fun setBooking(booking: Booking): Flow<Resource<String>> =
+        flow<Resource<String>> {
+            emit(Resource.Loading())
+            when (val userResponse = remoteDataSource.setBooking(
+                DataMapper.mapBookingToBookingResponse(booking)
+            ).first()) {
+                is ApiResponse.Success -> {
+                    emit(Resource.Success(""))
+                }
+                is ApiResponse.Error -> {
+                    emit(Resource.Error(userResponse.errorMessage))
+                }
+            }
+        }
 }

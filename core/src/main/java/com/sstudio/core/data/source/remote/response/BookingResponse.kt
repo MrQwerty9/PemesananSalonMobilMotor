@@ -1,9 +1,9 @@
 package com.sstudio.core.data.source.remote.response
 
 data class BookingResponse(
-    var customer: UserResponse = UserResponse(),
-    var time: String = "",
-    var team: PackageResponse = PackageResponse(),
-    var garage: GarageResponse = GarageResponse(),
-    var slot: Long = 0
+    var customerId: String = "",
+    var date: String = "",
+    var garageId: String = "",
+    var packageId: String = "",
+    var timeSlotId: String = ""
 )

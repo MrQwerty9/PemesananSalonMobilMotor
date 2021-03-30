@@ -54,7 +54,7 @@
                 android:layout_margin="15dp"
                 android:textAllCaps="false"
                 android:textColor="@color/white"
-                android:background="@drawable/button_primary_radius"
+                android:background="@drawable/button_disabled_radius"
                 android:layout_marginStart="5dp"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toEndOf="parent" />

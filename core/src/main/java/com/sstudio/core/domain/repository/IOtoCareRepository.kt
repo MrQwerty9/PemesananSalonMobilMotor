@@ -18,5 +18,7 @@ interface IOtoCareRepository {
     fun getBranchOfCity(city: String): Flow<Resource<List<Garage>>>
     fun getGarage(id: String): Flow<Resource<Garage>>
 
-    fun setBooking(booking: Booking)
+    fun getTimeSlot(date: String, garageId: String): Flow<Resource<List<TimeSlot>>>
+
+    fun setBooking(booking: Booking): Flow<Resource<String>>
 }

@@ -4,7 +4,6 @@ import android.content.Context
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import androidx.cardview.widget.CardView
 import androidx.core.content.ContextCompat
 import androidx.recyclerview.widget.RecyclerView
 import com.squareup.picasso.Picasso
@@ -15,7 +14,6 @@ import com.sstudio.otocare.databinding.ItemPackageBinding
 class PackageAdapter :
     RecyclerView.Adapter<PackageAdapter.ViewHolder>() {
 
-    private val cardViewList: ArrayList<CardView> = ArrayList()
     private var packageList: List<Package> = listOf()
     private var selectedPosition = -1
     private lateinit var context: Context

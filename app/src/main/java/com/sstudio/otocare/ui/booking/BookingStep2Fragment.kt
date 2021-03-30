@@ -7,6 +7,7 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
+import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
 import androidx.navigation.NavController
 import androidx.navigation.Navigation
@@ -14,6 +15,7 @@ import androidx.recyclerview.widget.GridLayoutManager
 import com.sstudio.core.data.Resource
 import com.sstudio.core.domain.model.Booking
 import com.sstudio.core.domain.model.User
+import com.sstudio.otocare.R
 import com.sstudio.otocare.common.SpaceItemDecoration
 import com.sstudio.otocare.databinding.FragmentBookingStepTwoBinding
 import com.sstudio.otocare.ui.booking.adapter.GarageAdapter
@@ -26,6 +28,7 @@ class BookingStep2Fragment : Fragment() {
     private val viewModel: BookingViewModel by viewModel()
     private val garageAdapter = GarageAdapter()
     private var currentUser: User? = null
+    private lateinit var bookingBundle: Booking
     private lateinit var navController: NavController
     private var _binding: FragmentBookingStepTwoBinding? = null
     private val binding get() = _binding!!
@@ -44,14 +47,20 @@ class BookingStep2Fragment : Fragment() {
         (activity as AppCompatActivity?)?.supportActionBar?.setDisplayHomeAsUpEnabled(true)
         (activity as BookingActivity?)?.setStep(1)
         binding.toolbar.title = "Pilih Lokasi"
-        val bookingBundle = BookingStep2FragmentArgs.fromBundle(requireArguments()).booking
+        bookingBundle = BookingStep2FragmentArgs.fromBundle(requireArguments()).booking
         dialog = SpotsDialog.Builder().setContext(activity).setCancelable(false).build()
         currentUser = requireActivity().intent.getParcelableExtra(BookingActivity.EXTRA_USER)
         navController = Navigation.findNavController(view)
         initView()
         loadAllCityOfGarage()
         loadBranchOfCity()
-        binding.btnNextStep.isEnabled = true
+    }
+
+    private fun initView() {
+        binding.rvGarage.setHasFixedSize(true)
+        binding.rvGarage.layoutManager = GridLayoutManager(activity, 2)
+        binding.rvGarage.addItemDecoration(SpaceItemDecoration(4))
+
         binding.btnNextStep.setOnClickListener {
             if (currentUser != null && garageAdapter.itemSelected != null) {
                 val action =
@@ -65,18 +74,14 @@ class BookingStep2Fragment : Fragment() {
                 navController.navigate(action)
             }
         }
+
         garageAdapter.selectedGaragePosition = {
+            setEnableNextBtn()
             viewModel.savedStateItemGarage = it
         }
         binding.toolbar.setNavigationOnClickListener {
             requireActivity().onBackPressed()
         }
-    }
-
-    private fun initView() {
-        binding.rvGarage.setHasFixedSize(true)
-        binding.rvGarage.layoutManager = GridLayoutManager(activity, 2)
-        binding.rvGarage.addItemDecoration(SpaceItemDecoration(4))
     }
 
     private fun loadAllCityOfGarage() {
@@ -97,6 +102,7 @@ class BookingStep2Fragment : Fragment() {
                             viewModel.savedStateItemGarage = -1 //reset
                             viewModel.savedStateSpinnerCity = position
                             if (position > 0)
+//                                loadBranchOfCity(it[position - 1].id)
                                 viewModel.city.value = it[position - 1].id
                             else
                                 binding.rvGarage.visibility = View.GONE
@@ -109,17 +115,6 @@ class BookingStep2Fragment : Fragment() {
                 }
             }
         }
-//        allSalonRef.get()
-//            .addOnCompleteListener { task ->
-//                if (task.isSuccessful) {
-//                    val list = ArrayList<String>()
-//                    list.add("Silahkan pilih kota")
-//                    for (queryDocumentSnapshot in task.result!!) {
-//                        list.add(queryDocumentSnapshot.id)
-//                    }
-//                    iAllSalonLoadListener.onAllSalonLoadSuccess(list)
-//                }
-//            }.addOnFailureListener { e -> iAllSalonLoadListener.onAllSalonLoadFailed(e.message!!) }
     }
 
     private fun loadBranchOfCity() {
@@ -134,7 +129,10 @@ class BookingStep2Fragment : Fragment() {
 
                         garageAdapter.setGarageList(it)
                         binding.rvGarage.adapter = garageAdapter
-                        garageAdapter.setSelectedPosition(viewModel.savedStateItemGarage)
+                        if (viewModel.savedStateItemGarage >= 0) {
+                            garageAdapter.setSelectedPosition(viewModel.savedStateItemGarage)
+                            setEnableNextBtn()
+                        }
                         dialog.dismiss()
                     }
                 }
@@ -144,26 +142,11 @@ class BookingStep2Fragment : Fragment() {
                 }
             }
         }
-//        branchRef = FirebaseFirestore.getInstance()
-//            .collection("Cabang")
-//            .document(cityName)
-//            .collection("Branch")
-//
-//        branchRef.get().addOnCompleteListener { task ->
-//            val list = ArrayList<com.sstudio.core.domain.model.Salon>()
-//            if (task.isSuccessful){
-//                for (queryDocumentSnapshot in task.result!!) {
-//                    val salon =
-//                        queryDocumentSnapshot.toObject(com.sstudio.core.domain.model.Salon::class.java)
-//                    salon.salonId = queryDocumentSnapshot.id
-//                    list.add(salon)
-//                }
-//
-//                iBranchLoadListener.onBranchLoadSuccess(list)
-//            }
-//        }.addOnFailureListener {
-//            iBranchLoadListener.onBranchLoadFailed(it.message!!)
-//        }
     }
 
+    private fun setEnableNextBtn() {
+        binding.btnNextStep.isEnabled = true
+        binding.btnNextStep.background =
+            ContextCompat.getDrawable(requireActivity(), R.drawable.button_primary_radius)
+    }
 }

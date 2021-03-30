@@ -6,8 +6,8 @@ import kotlinx.parcelize.Parcelize
 @Parcelize
 data class Booking(
     var customer: User = User(),
-    var time: String = "",
+    var timeSlot: TimeSlot = TimeSlot(),
     var pkg: Package = Package(),
     var garage: Garage = Garage(),
-    var slot: Long = 0
+    var date: String = ""
 ) : Parcelable

@@ -3,12 +3,12 @@ package com.sstudio.otocare.ui.booking
 
 import android.app.AlertDialog
 import android.os.Bundle
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
+import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
 import androidx.navigation.NavController
 import androidx.navigation.Navigation
@@ -16,6 +16,7 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import com.sstudio.core.data.Resource
 import com.sstudio.core.domain.model.Booking
 import com.sstudio.core.domain.model.User
+import com.sstudio.otocare.R
 import com.sstudio.otocare.databinding.FragmentBookingStepOneBinding
 import com.sstudio.otocare.ui.booking.adapter.PackageAdapter
 import dmax.dialog.SpotsDialog
@@ -48,19 +49,52 @@ class BookingStep1Fragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        (activity as AppCompatActivity?)?.setSupportActionBar(binding.toolbar)
-        (activity as AppCompatActivity?)?.supportActionBar?.setDisplayHomeAsUpEnabled(true)
-        (activity as BookingActivity?)?.setStep(0)
-        binding.toolbar.title = "Pilih Paket"
+        setToolbar()
         dialog = SpotsDialog.Builder().setContext(activity).setCancelable(false).build()
         currentUser = requireActivity().intent.getParcelableExtra(BookingActivity.EXTRA_USER)
         navController = Navigation.findNavController(view)
         initView()
         loadAllPackage()
+    }
 
-        binding.btnNextStep.isEnabled = true
+    private fun setToolbar() {
+        (activity as AppCompatActivity?)?.setSupportActionBar(binding.toolbar)
+        (activity as AppCompatActivity?)?.supportActionBar?.setDisplayHomeAsUpEnabled(true)
+        (activity as BookingActivity?)?.setStep(0)
+        binding.toolbar.title = "Pilih Paket"
+    }
+
+    private fun loadAllPackage() {
+        viewModel.getPackage?.observe(viewLifecycleOwner) { resource ->
+            when (resource) {
+                is Resource.Loading -> dialog.show()
+                is Resource.Success -> {
+                    dialog.dismiss()
+                    resource.data?.let {
+                        packageAdapter.setPackage(it)
+                        binding.rvPackage.adapter = packageAdapter
+                        if (viewModel.savedStatePackage >= 0) {
+                            packageAdapter.setSelectedPosition(viewModel.savedStatePackage)
+                            setEnableNextBtn()
+                        }
+                    }
+                }
+                is Resource.Error -> {
+                    dialog.dismiss()
+                    Toast.makeText(activity, resource.message, Toast.LENGTH_SHORT).show()
+                }
+            }
+        }
+    }
+
+    private fun initView() {
+        binding.rvPackage.setHasFixedSize(true)
+        binding.rvPackage.layoutManager = LinearLayoutManager(requireContext())
+
+        if (packageAdapter.itemSelected != null) {
+            setEnableNextBtn()
+        }
         binding.btnNextStep.setOnClickListener {
-            Log.d("mytag", "user $currentUser")
             if (currentUser != null && packageAdapter.itemSelected != null) {
                 val action =
                     BookingStep1FragmentDirections.actionGotoStepTwo(
@@ -76,30 +110,17 @@ class BookingStep1Fragment : Fragment() {
         binding.toolbar.setNavigationOnClickListener {
             requireActivity().onBackPressed()
         }
-    }
 
-    private fun loadAllPackage() {
-        viewModel.getPackage?.observe(viewLifecycleOwner) { resource ->
-            when (resource) {
-                is Resource.Loading -> dialog.show()
-                is Resource.Success -> {
-                    dialog.dismiss()
-                    resource.data?.let {
-                        packageAdapter.setPackage(it)
-                        binding.rvPackage.adapter = packageAdapter
-                    }
-                }
-                is Resource.Error -> {
-                    dialog.dismiss()
-                    Toast.makeText(activity, resource.message, Toast.LENGTH_SHORT).show()
-                }
-            }
+        packageAdapter.selectedPackagePosition = {
+            setEnableNextBtn()
+            viewModel.savedStatePackage = it
         }
     }
 
-    private fun initView() {
-        binding.rvPackage.setHasFixedSize(true)
-        binding.rvPackage.layoutManager = LinearLayoutManager(requireContext())
+    private fun setEnableNextBtn() {
+        binding.btnNextStep.isEnabled = true
+        binding.btnNextStep.background =
+            ContextCompat.getDrawable(requireActivity(), R.drawable.button_primary_radius)
     }
 
 }

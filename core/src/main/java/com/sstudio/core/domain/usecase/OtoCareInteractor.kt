@@ -33,6 +33,9 @@ class OtoCareInteractor(private val iOtoCareRepository: IOtoCareRepository) : Ot
     override fun getGarage(id: String): Flow<Resource<Garage>> =
         iOtoCareRepository.getGarage(id)
 
-    override fun setBooking(booking: Booking) =
+    override fun getTimeSlot(date: String, garageId: String): Flow<Resource<List<TimeSlot>>> =
+        iOtoCareRepository.getTimeSlot(date, garageId)
+
+    override fun setBooking(booking: Booking): Flow<Resource<String>> =
         iOtoCareRepository.setBooking(booking)
 }

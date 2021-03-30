@@ -36,9 +36,16 @@
     <fragment
             android:id="@+id/fragment_booking_step_four"
             android:name="com.sstudio.otocare.ui.booking.BookingStep4Fragment">
+        <action
+                android:id="@+id/action_goto_finish"
+                app:destination="@+id/fragment_booking_finish"
+                app:popUpTo="@+id/booking_nav"
+                app:popUpToInclusive="true" />
         <argument
                 android:name="booking"
                 app:argType="com.sstudio.core.domain.model.Booking" />
     </fragment>
-
+    <fragment
+            android:id="@+id/fragment_booking_finish"
+            android:name="com.sstudio.otocare.ui.booking.FinishFragment"></fragment>
 </navigation>

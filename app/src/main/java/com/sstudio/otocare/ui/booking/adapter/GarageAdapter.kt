@@ -3,7 +3,6 @@ package com.sstudio.otocare.ui.booking.adapter
 import android.content.Context
 import android.view.LayoutInflater
 import android.view.ViewGroup
-import androidx.cardview.widget.CardView
 import androidx.core.content.ContextCompat
 import androidx.recyclerview.widget.RecyclerView
 import com.sstudio.core.domain.model.Garage
@@ -15,7 +14,6 @@ class GarageAdapter : RecyclerView.Adapter<GarageAdapter.ViewHolder>() {
     var itemSelected: Garage? = null
     var selectedGaragePosition: ((Int) -> Unit)? = null
 
-    var cardViewList = ArrayList<CardView>()
     private lateinit var context: Context
     private var garageList: List<Garage> = ArrayList()
     private var selectedPosition = -1
@@ -52,8 +50,6 @@ class GarageAdapter : RecyclerView.Adapter<GarageAdapter.ViewHolder>() {
 
             binding.tvGarageName.text = garage.name
             binding.tvGarageAddress.text = garage.address
-//            if (!cardViewList.contains(binding.cardGarage))
-//                cardViewList.add(binding.cardGarage)
 
             if (selectedPosition == position) {
 //                binding.cardSalon.isSelected = true
@@ -80,22 +76,12 @@ class GarageAdapter : RecyclerView.Adapter<GarageAdapter.ViewHolder>() {
 
 
             binding.cardGarage.setOnClickListener {
-                //set background putin untuk semua card tdk dipilih
-//                for (cardView: CardView in cardViewList) {
-//                    cardView.setCardBackgroundColor(ContextCompat.getColor(context, R.color.white))
-//                }
 
                 if (selectedPosition >= 0)
                     notifyItemChanged(selectedPosition)
                 selectedPosition = position
                 notifyItemChanged(selectedPosition)
                 selectedGaragePosition?.invoke(selectedPosition)
-
-                //kirim broadcast untuk bookingActivity enable button next
-//                val intent = Intent(Common.KEY_ENABLE_BUTTON_NEXT)
-//                intent.putExtra(Common.KEY_SALON_STORE, garage)
-//                intent.putExtra(Common.KEY_STEP, 1)
-//                localBroadcastManager.sendBroadcast(intent)
             }
         }
     }

@@ -1,28 +1,27 @@
 package com.sstudio.otocare.ui.booking
 
-import android.content.BroadcastReceiver
-import android.content.Context
-import android.content.Intent
-import android.content.IntentFilter
+import android.app.AlertDialog
 import android.os.Bundle
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Toast
+import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.Fragment
-import androidx.localbroadcastmanager.content.LocalBroadcastManager
+import androidx.navigation.NavController
+import androidx.navigation.Navigation
+import com.sstudio.core.data.Resource
 import com.sstudio.core.domain.model.Booking
-import com.sstudio.otocare.common.Common
 import com.sstudio.otocare.databinding.FragmentBookingStepFourBinding
-import java.text.SimpleDateFormat
-import java.util.*
+import dmax.dialog.SpotsDialog
+import org.koin.android.viewmodel.ext.android.viewModel
 
 class BookingStep4Fragment : Fragment() {
 
-    var mInstance: BookingStep4Fragment? = null
-    private val simpleDateFormat = SimpleDateFormat("dd/MM/yyyy")
-    private lateinit var localBroadCastManager: LocalBroadcastManager
-    private val booking = Booking()
+    private val viewModel: BookingViewModel by viewModel()
+    private lateinit var navController: NavController
+    private lateinit var dialog: AlertDialog
+    private lateinit var bookingBundle: Booking
     private var _binding: FragmentBookingStepFourBinding? = null
     private val binding get() = _binding!!
 
@@ -38,80 +37,51 @@ class BookingStep4Fragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        localBroadCastManager = LocalBroadcastManager.getInstance(requireContext())
-        localBroadCastManager.registerReceiver(
-            confirmBookingReceiver(),
-            IntentFilter(Common.KEY_CONFIRM_BOOKING)
-        )
+        bookingBundle = BookingStep4FragmentArgs.fromBundle(requireArguments()).booking
+        dialog = SpotsDialog.Builder().setContext(context).setCancelable(false).build()
+        navController = Navigation.findNavController(view)
+
+        setToolbar()
+        setData()
+
+        binding.toolbar.setNavigationOnClickListener {
+            requireActivity().onBackPressed()
+        }
 
         binding.btnConfirm.setOnClickListener {
-            Log.d("mytag", "klik2")
-
-            //booking informasi
-            Log.d("mytag", "klik")
-            booking.pkg.id = Common.currentBengkel!!.id
-            booking.pkg.name = Common.currentBengkel!!.name
-            booking.customer.name = Common.currentUser!!.name
-            booking.customer.phoneNumber = Common.currentUser!!.phoneNumber
-            booking.garage.id = Common.currentGarage!!.id
-            booking.garage.address = Common.currentGarage!!.address
-            booking.garage.name = Common.currentGarage!!.name
-            booking.slot = Common.currentTimeSlot.toLong()
-            booking.time =
-                StringBuilder(Common.convertTimeSlotToString(Common.currentTimeSlot))
-                    .append(" " + simpleDateFormat.format(Common.currentDate.time)).toString()
-
-//            val bookingDate = FirebaseFirestore.getInstance()
-//                .collection("Cabang")
-//                .document(Common.city)
-//                .collection("Branch")
-//                .document(Common.currentSalon!!.salonId)
-//                .collection("Salon")
-//                .document(Common.currentBengkel!!.bengkelId)
-//                .collection(Common.simpleDateFormat.format(Common.currentDate.time))
-//                .document(Common.currentTimeSlot.toString())
-
-            //write data
-
-//            bookingDate.set(booking)
-//                .addOnSuccessListener {
-//                    resetStaticData()
-//                    activity?.finish() //close activity
-//                    Toast.makeText(context, "Berhasil!", Toast.LENGTH_SHORT).show()
-//                }.addOnFailureListener {
-//                    Toast.makeText(context, "" + it.message, Toast.LENGTH_SHORT).show()
-//                }
+            viewModel.setBooking(bookingBundle).observe(viewLifecycleOwner) { resource ->
+                when (resource) {
+                    is Resource.Loading -> dialog.show()
+                    is Resource.Success -> {
+                        dialog.dismiss()
+                        resource.data?.let {
+                            val action = BookingStep4FragmentDirections.actionGotoFinish()
+                            navController.navigate(action)
+                        }
+                    }
+                    is Resource.Error -> {
+                        dialog.dismiss()
+                        Toast.makeText(activity, resource.message, Toast.LENGTH_SHORT).show()
+                    }
+                }
+            }
         }
 
     }
 
-    fun getmInstance(): BookingStep4Fragment {
-        if (mInstance == null)
-            mInstance = BookingStep4Fragment()
-        return mInstance!!
-    }
-
-    private fun resetStaticData() {
-        Common.step = 0
-        Common.currentTimeSlot = -1
-        Common.currentGarage = null
-        Common.currentBengkel = null
-        Common.currentDate.add(Calendar.DATE, 0) //current date
-    }
-
-    fun confirmBookingReceiver() = object : BroadcastReceiver() {
-        override fun onReceive(context: Context?, intent: Intent?) {
-            setData()
-        }
+    private fun setToolbar() {
+        (activity as AppCompatActivity?)?.setSupportActionBar(binding.toolbar)
+        (activity as AppCompatActivity?)?.supportActionBar?.setDisplayHomeAsUpEnabled(true)
+        (activity as BookingActivity?)?.setStep(3)
+        binding.toolbar.title = "Konfirmasi"
     }
 
 
     private fun setData() {
-        binding.tvTime.text = StringBuilder(Common.convertTimeSlotToString(Common.currentTimeSlot))
-            .append(" " + simpleDateFormat.format(Common.currentDate.time))
-        binding.tvBookingTechnician.text = Common.currentBengkel?.name
-        binding.tvPhone.text = Common.currentGarage?.phone
-        binding.tvGarageName.text = Common.currentGarage?.name
+        binding.tvTime.text = bookingBundle.timeSlot.timeSlot
+        binding.tvBookingTechnician.text = bookingBundle.pkg.name
+        binding.tvPhone.text = bookingBundle.customer.phoneNumber
+        binding.tvGarageName.text = bookingBundle.garage.name
     }
 
 }

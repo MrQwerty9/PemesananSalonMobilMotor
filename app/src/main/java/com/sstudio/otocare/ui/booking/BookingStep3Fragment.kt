@@ -2,38 +2,38 @@ package com.sstudio.otocare.ui.booking
 
 
 import android.app.AlertDialog
-import android.content.BroadcastReceiver
-import android.content.Context
-import android.content.Intent
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
+import androidx.appcompat.app.AppCompatActivity
+import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
+import androidx.navigation.NavController
+import androidx.navigation.Navigation
 import androidx.recyclerview.widget.GridLayoutManager
+import com.sstudio.core.data.Resource
+import com.sstudio.core.domain.model.Booking
 import com.sstudio.otocare.R
-import com.sstudio.otocare.common.Common
 import com.sstudio.otocare.common.SpaceItemDecoration
 import com.sstudio.otocare.databinding.FragmentBookingStepThreeBinding
-import com.sstudio.otocare.listener.ITimeSlotLoadListener
 import com.sstudio.otocare.ui.booking.adapter.TimeSlotAdapter
 import devs.mulham.horizontalcalendar.HorizontalCalendar
 import devs.mulham.horizontalcalendar.utils.HorizontalCalendarListener
 import dmax.dialog.SpotsDialog
-import java.text.SimpleDateFormat
+import org.koin.android.viewmodel.ext.android.viewModel
 import java.util.*
 
-class BookingStep3Fragment : Fragment(), ITimeSlotLoadListener {
+class BookingStep3Fragment : Fragment() {
 
-    var mInstance: BookingStep3Fragment? = null
-
-    //    private lateinit var bengkelDoo: DocumentReference
-    private lateinit var iTimeSlotLoadListener: ITimeSlotLoadListener
     private lateinit var dialog: AlertDialog
-    private lateinit var simpleDateFormat: SimpleDateFormat
+    private val viewModel: BookingViewModel by viewModel()
+    private lateinit var navController: NavController
     private var _binding: FragmentBookingStepThreeBinding? = null
     private val binding get() = _binding!!
+    private lateinit var bookingBundle: Booking
+    private val timeSlotAdapter = TimeSlotAdapter()
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -45,72 +45,58 @@ class BookingStep3Fragment : Fragment(), ITimeSlotLoadListener {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-
+        navController = Navigation.findNavController(view)
+        bookingBundle = BookingStep3FragmentArgs.fromBundle(requireArguments()).booking
+        setToolbar()
         initView()
-        iTimeSlotLoadListener = this
-        simpleDateFormat = SimpleDateFormat("dd_MM_yyyy")
         dialog = SpotsDialog.Builder().setContext(context).setCancelable(false).build()
-    }
 
-    private val displayTimeSlot = object : BroadcastReceiver() {
-        override fun onReceive(p0: Context?, p1: Intent?) {
-            val date = Calendar.getInstance()
-            date.add(Calendar.DATE, 0) //add current date
-            loadAvailableTimeSlotOfBengkel(
-                Common.currentBengkel!!.id,
-                simpleDateFormat.format(date.time)
-            )
+        viewModel.garageSelected = bookingBundle.garage
+        viewModel.getTimeSlot.observe(viewLifecycleOwner) { resource ->
+            when (resource) {
+                is Resource.Loading -> dialog.show()
+                is Resource.Success -> {
+                    dialog.dismiss()
+                    resource.data?.let {
+                        binding.rvTimeSlotStep3.visibility = View.VISIBLE
+
+                        timeSlotAdapter.setTimeSlot(it)
+                        binding.rvTimeSlotStep3.adapter = timeSlotAdapter
+                        if (viewModel.savedStateItemTimeSlot >= 0) {
+                            timeSlotAdapter.setSelectedPosition(viewModel.savedStateItemTimeSlot)
+                            setEnableNextBtn()
+                        }
+                        dialog.dismiss()
+                    }
+                }
+                is Resource.Error -> {
+                    dialog.dismiss()
+                    Toast.makeText(activity, resource.message, Toast.LENGTH_SHORT).show()
+                }
+            }
+        }
+
+        timeSlotAdapter.selectedTimeSlotPosition = {
+            setEnableNextBtn()
+            viewModel.savedStateItemTimeSlot = it
+        }
+
+        binding.toolbar.setNavigationOnClickListener {
+            requireActivity().onBackPressed()
         }
     }
 
-    private fun loadAvailableTimeSlotOfBengkel(bengkelId: String, bookDate: String?) {
+    private fun setToolbar() {
+        (activity as AppCompatActivity?)?.setSupportActionBar(binding.toolbar)
+        (activity as AppCompatActivity?)?.supportActionBar?.setDisplayHomeAsUpEnabled(true)
+        (activity as BookingActivity?)?.setStep(2)
+        binding.toolbar.title = "Pilih Waktu"
+    }
+
+    private fun loadAvailableTimeSlot(bengkelId: String, bookDate: String?) {
         dialog.show()
-
-        // /Cabang/Semolowaru/Branch/03Fw4uig9UPvUSyjhdrR/Salon/fu9kIFHAcDggmEUmItcu
-//        bengkelDoo = FirebaseFirestore.getInstance()
-//            .collection("Cabang")
-//            .document(Common.city)
-//            .collection("Branch")
-//            .document(Common.currentSalon!!.id)
-//            .collection("Salon")
-//            .document(Common.currentBengkel!!.id)
-
-        //Get informasi this bengkel
-//        bengkelDoo.get().addOnCompleteListener {
-//            if (it.isSuccessful){
-//                val documentSnapshot = it.result
-//                if (documentSnapshot!!.exists()){
-//                    //get informasi booking
-//                    //jika tidak created, return empty
-//                    val date = FirebaseFirestore.getInstance()
-//                        .collection("Cabang")
-//                        .document(Common.city)
-//                        .collection("Branch")
-//                        .document(Common.currentSalon!!.salonId)
-//                        .collection("Salon")
-//                        .document(Common.currentBengkel!!.bengkelId)
-//                        .collection(bookDate!!)
-//
-//                    date.get().addOnCompleteListener {
-//                        if (it.isSuccessful){
-//                            val querySnapshot = it.result!!
-//                            if (querySnapshot.isEmpty){ //jika tidak ada janji
-//                                iTimeSlotLoadListener.onTimeSlotLoadEmpty()
-//                            }
-//                            else{//jika ada janji
-//                                Log.d("step3", "ada janji")
-//                                val timeSlot = ArrayList<com.sstudio.core.domain.model.TimeSlot>()
-//                                for (document in it.result!!)
-//                                    timeSlot.add(document.toObject(com.sstudio.core.domain.model.TimeSlot::class.java))
-//                                iTimeSlotLoadListener.onTimeSlotLoadSuccess(timeSlot)
-//                            }
-//                        }
-//                    }.addOnFailureListener {
-//                        iTimeSlotLoadListener.onTimeSlotLoadFailed(it.message!!)
-//                    }
-//                }
-//            }
-//        }
+        val date = Calendar.getInstance()
+        date.add(Calendar.DATE, 0)
     }
 
     private fun initView() {
@@ -119,50 +105,45 @@ class BookingStep3Fragment : Fragment(), ITimeSlotLoadListener {
         binding.rvTimeSlotStep3.layoutManager = gridLayoutManager
         binding.rvTimeSlotStep3.addItemDecoration(SpaceItemDecoration(8))
 
-        val startDate = Calendar.getInstance()
-        startDate.add(Calendar.DATE, 0)
-        val endDate = Calendar.getInstance()
-        endDate.add(Calendar.DATE, 2)
+        val startDate = Calendar.getInstance(TimeZone.getDefault())
+        startDate.add(Calendar.DATE, 1)
+        val endDate = Calendar.getInstance(TimeZone.getDefault())
+        endDate.add(Calendar.DATE, 7)
 
         val horizontalCalendar = HorizontalCalendar.Builder(requireActivity(), R.id.calendar_step3)
             .range(startDate, endDate)
-            .datesNumberOnScreen(1)
+            .datesNumberOnScreen(3)
             .mode(HorizontalCalendar.Mode.DAYS)
             .defaultSelectedDate(startDate)
             .build()
 
         horizontalCalendar.calendarListener = object : HorizontalCalendarListener() {
             override fun onDateSelected(date: Calendar?, position: Int) {
-                if (Common.currentDate.timeInMillis != date!!.timeInMillis) {
-                    Common.currentDate =
-                        date //tidak load lagi jika milih hari baru yang sama dg hari yg telah dipilih
-                    loadAvailableTimeSlotOfBengkel(
-                        Common.currentBengkel!!.id,
-                        simpleDateFormat.format(date.time)
-                    )
-
-                }
+                viewModel.savedStateItemTimeSlot = -1
+                viewModel.setDateSelected(date?.time)
             }
+        }
 
+        binding.btnNextStep.setOnClickListener {
+            if (timeSlotAdapter.itemSelected != null) {
+                val action =
+                    BookingStep3FragmentDirections.actionGotoStepFour(
+                        Booking(
+                            customer = bookingBundle.customer,
+                            garage = bookingBundle.garage,
+                            pkg = bookingBundle.pkg,
+                            timeSlot = timeSlotAdapter.itemSelected!!,
+                            date = viewModel.dateSelected.value ?: ""
+                        )
+                    )
+                navController.navigate(action)
+            }
         }
     }
 
-    override fun onTimeSlotLoadSuccess(timeSlotList: ArrayList<com.sstudio.core.domain.model.TimeSlot>) {
-        val adapter = TimeSlotAdapter()
-        binding.rvTimeSlotStep3.adapter = adapter
-
-        dialog.dismiss()
-    }
-
-    override fun onTimeSlotLoadFailed(message: String) {
-        Toast.makeText(context, message, Toast.LENGTH_SHORT).show()
-        dialog.dismiss()
-    }
-
-    override fun onTimeSlotLoadEmpty() {
-        val adapter = TimeSlotAdapter()
-        binding.rvTimeSlotStep3.adapter = adapter
-
-        dialog.dismiss()
+    private fun setEnableNextBtn() {
+        binding.btnNextStep.isEnabled = true
+        binding.btnNextStep.background =
+            ContextCompat.getDrawable(requireActivity(), R.drawable.button_primary_radius)
     }
 }
