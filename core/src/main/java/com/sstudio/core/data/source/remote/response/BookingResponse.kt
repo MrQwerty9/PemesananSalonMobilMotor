@@ -5,5 +5,6 @@ data class BookingResponse(
     var date: String = "",
     var garageId: String = "",
     var packageId: String = "",
-    var timeSlotId: String = ""
+    var timeSlotId: String = "",
+    var eventId: String = ""
 )

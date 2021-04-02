@@ -9,5 +9,6 @@ data class Booking(
     var timeSlot: TimeSlot = TimeSlot(),
     var pkg: Package = Package(),
     var garage: Garage = Garage(),
-    var date: String = ""
+    var date: String = "",
+    var eventId: Int = 0
 ) : Parcelable

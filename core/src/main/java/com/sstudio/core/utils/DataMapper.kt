@@ -59,6 +59,7 @@ object DataMapper {
             date = input.date,
             garageId = input.garage.id,
             packageId = input.pkg.id,
-            timeSlotId = input.timeSlot.id.toString()
+            timeSlotId = input.timeSlot.id.toString(),
+            eventId = input.eventId.toString()
         )
 }

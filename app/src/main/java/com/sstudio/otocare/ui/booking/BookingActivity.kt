@@ -1,10 +1,12 @@
 package com.sstudio.otocare.ui.booking
 
+import android.Manifest
 import android.app.AlertDialog
 import android.os.Bundle
 import android.view.View
 import androidx.appcompat.app.AppCompatActivity
 import com.sstudio.otocare.databinding.ActivityBookingBinding
+import com.sstudio.otocare.utils.PermissionManager
 import dmax.dialog.SpotsDialog
 
 class BookingActivity : AppCompatActivity() {
@@ -23,6 +25,7 @@ class BookingActivity : AppCompatActivity() {
 
         dialog = SpotsDialog.Builder().setContext(this).setCancelable(false).build()
         setupStepView()
+        checkPermission()
     }
 
     fun setStep(step: Int) {
@@ -31,6 +34,11 @@ class BookingActivity : AppCompatActivity() {
 
     fun hideStepView() {
         binding.stepViewBooking.visibility = View.GONE
+    }
+
+    private fun checkPermission() {
+        PermissionManager.request(this, Manifest.permission.READ_CALENDAR, 101)
+        PermissionManager.request(this, Manifest.permission.WRITE_CALENDAR, 101)
     }
 
     private fun setupStepView() {
