@@ -1,10 +1,16 @@
 package com.sstudio.core.data.source.remote.response
 
 data class BookingResponse(
-    var customerId: String = "",
+    var userPhone: String = "",
     var date: String = "",
     var garageId: String = "",
+    val garageName: String = "",
+    val garageAddress: String = "",
+    var garagePhone: String = "",
     var packageId: String = "",
-    var timeSlotId: String = "",
-    var eventId: String = ""
+    var packageName: String = "",
+    var packageInclude: List<String> = listOf(),
+    var packagePrice: Double = 0.0,
+    var timeId: String = "",
+    var time: String = "",
 )

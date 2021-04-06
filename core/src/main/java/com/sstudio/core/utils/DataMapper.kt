@@ -55,11 +55,35 @@ object DataMapper {
 
     fun mapBookingToBookingResponse(input: Booking): BookingResponse =
         BookingResponse(
-            customerId = input.customer.phoneNumber,
+            userPhone = input.customer.phoneNumber,
             date = input.date,
             garageId = input.garage.id,
+            garageName = input.garage.name,
+            garageAddress = input.garage.address,
+            garagePhone = input.garage.phone,
             packageId = input.pkg.id,
-            timeSlotId = input.timeSlot.id.toString(),
-            eventId = input.eventId.toString()
+            packageName = input.pkg.name,
+            packageInclude = input.pkg.include,
+            packagePrice = input.pkg.price,
+            time = input.timeSlot.timeSlot.toString(),
+            timeId = input.timeSlot.id.toString()
+        )
+
+    fun mapBookingResponseToDomain(input: BookingResponse): Booking =
+        Booking(
+            timeSlot = TimeSlot(id = input.timeId.toInt(), timeSlot = input.time),
+            date = input.date,
+            pkg = Package(
+                id = input.packageId,
+                name = input.packageName,
+                include = input.packageInclude,
+                price = input.packagePrice
+            ),
+            garage = Garage(
+                id = input.packageId,
+                name = input.garageName,
+                address = input.garageAddress,
+                phone = input.garagePhone
+            ),
         )
 }

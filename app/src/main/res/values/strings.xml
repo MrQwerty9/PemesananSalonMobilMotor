@@ -3,6 +3,15 @@
     <string name="app_name">OtoCare</string>
 
     <string name="hello_blank_fragment">Hello blank fragment</string>
+    <string name="label_booking_info">Informasi booking anda</string>
+    <string name="label_garage">Garasi :</string>
+    <string name="label_address">Alamat :</string>
+    <string name="label_time">Waktu :</string>
+    <string name="label_package">Paket :</string>
+    <string name="wrong_code_verif">Kode yang anda masukkan salah</string>
+    <string name="please_wait_resend_code">Harap tunggu beberapa saat lagi untuk mengirim ulang</string>
+    <string name="sending_code_verif">Mengirim kode verifikasi</string>
+    <string name="enter_verif_code">Masukkan kode verifikasi</string>
 
 
 </resources>

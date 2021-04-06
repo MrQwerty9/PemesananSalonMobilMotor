@@ -185,5 +185,52 @@ class RemoteDataSource(private val db: FirebaseFirestore) {
         }.catch {
             emit(ApiResponse.Error(it.message.toString()))
         }.flowOn(Dispatchers.IO)
+
+    @ExperimentalCoroutinesApi
+    fun getBookingUser(phoneNumber: String): Flow<ApiResponse<List<BookingResponse>>> {
+        return callbackFlow<ApiResponse<List<BookingResponse>>> {
+            val docRef = db.collection("Booking").whereEqualTo("userPhone", phoneNumber)
+            val listener = docRef.addSnapshotListener { snapshot, exception ->
+                val listBooking = ArrayList<BookingResponse>()
+                snapshot?.let {
+                    for (booking in it) {
+                        listBooking.add(booking.toObject(BookingResponse::class.java))
+                    }
+                }
+                offer(ApiResponse.Success(listBooking))
+
+                exception?.let {
+                    offer(ApiResponse.Error(it.message.toString()))
+                    cancel()
+                }
+            }
+            awaitClose {
+                listener.remove()
+                cancel()
+            }
+        }.flowOn(Dispatchers.IO)
+    }
+
+    fun getGarage(id: String): Flow<ApiResponse<GarageResponse>> {
+        return flow<ApiResponse<GarageResponse>> {
+            val docRef = db.collection("Garage").document(id)
+            val snapshot = docRef.get().await()
+            val response = snapshot.toObject(GarageResponse::class.java) ?: GarageResponse()
+            emit(ApiResponse.Success(response))
+        }.catch {
+            emit(ApiResponse.Error(it.message.toString()))
+        }.flowOn(Dispatchers.IO)
+    }
+
+    fun getPackage(id: String): Flow<ApiResponse<PackageResponse>> {
+        return flow<ApiResponse<PackageResponse>> {
+            val docRef = db.collection("Package").document(id)
+            val snapshot = docRef.get().await()
+            val response = snapshot.toObject(PackageResponse::class.java) ?: PackageResponse()
+            emit(ApiResponse.Success(response))
+        }.catch {
+            emit(ApiResponse.Error(it.message.toString()))
+        }.flowOn(Dispatchers.IO)
+    }
 }
 

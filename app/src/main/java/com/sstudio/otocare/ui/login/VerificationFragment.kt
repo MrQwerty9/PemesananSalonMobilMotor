@@ -43,7 +43,7 @@ class VerificationFragment : Fragment(), View.OnClickListener {
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
-    ): View? {
+    ): View {
         _binding = FragmentVerificationBinding.inflate(inflater, container, false)
         return binding.root
     }
@@ -89,9 +89,13 @@ class VerificationFragment : Fragment(), View.OnClickListener {
                 if (mResendToken != null && !isTimerActive) {
                     resendVerificationCode(phoneNumber.toString(), mResendToken)
                     showTimer(60000)
-                    showProgressDialog(requireContext(), "Sending a verification code", false)
+                    showProgressDialog(
+                        requireContext(),
+                        getString(R.string.sending_code_verif),
+                        false
+                    )
                 } else {
-                    toast("Sorry, You Can't request new code now, Please wait ...")
+                    toast(getString(R.string.please_wait_resend_code))
                 }
 
             }
@@ -146,8 +150,7 @@ class VerificationFragment : Fragment(), View.OnClickListener {
                     if (progressDialog != null) {
                         dismissProgressDialog(progressDialog)
                     }
-
-                    notifyUserAndRetry("Your Phone Number Verification is failed.Retry again!")
+                    toast(getString(R.string.wrong_code_verif))
                 }
             }
     }
@@ -174,7 +177,7 @@ class VerificationFragment : Fragment(), View.OnClickListener {
             override fun onTick(millisUntilFinished: Long) {
                 timeLeft = millisUntilFinished
                 binding.tvCounterDown.visibility = View.VISIBLE
-                binding.tvCounterDown.text = "seconds remaining: " + millisUntilFinished / 1000
+                binding.tvCounterDown.text = "sisa waktu: " + millisUntilFinished / 1000
 
                 //here you can have your logic to set text to edittext
             }
@@ -233,10 +236,10 @@ class VerificationFragment : Fragment(), View.OnClickListener {
                     dismissProgressDialog(progressDialog)
                 }
 
-                val smsMessageSent : String = credential.smsCode.toString()
+                val smsMessageSent: String = credential.smsCode.toString()
                 Log.e("the message is ----- ", smsMessageSent)
-                if(smsMessageSent!=null)
-                    binding.etSentCode.setText(smsMessageSent)
+
+                binding.etSentCode.setText(smsMessageSent)
 
                 signInWithPhoneAuthCredential(credential)
             }

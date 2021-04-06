@@ -7,6 +7,7 @@ import androidx.lifecycle.asLiveData
 import com.google.firebase.auth.FirebaseAuth
 import com.sstudio.core.data.Resource
 import com.sstudio.core.domain.model.Banner
+import com.sstudio.core.domain.model.Booking
 import com.sstudio.core.domain.model.User
 import com.sstudio.core.domain.usecase.OtoCareUseCase
 
@@ -21,6 +22,9 @@ class HomeViewModel(private val otoCareUseCase: OtoCareUseCase) : ViewModel() {
 
     fun setUser(user: User): LiveData<Resource<String>> =
         otoCareUseCase.setUser(user).asLiveData()
+
+    fun getBookingInformation(): LiveData<Resource<Booking>> =
+        otoCareUseCase.getBookingInformation(userPhone).asLiveData()
 
     var getUser: LiveData<Resource<User>>? = null
         get() {

@@ -45,6 +45,7 @@ class HomeFragment : Fragment() {
         setUserInformation()
         loadBanner()
         loadLookBook()
+        loadBookingInformation()
 
         dialog = SpotsDialog.Builder().setContext(requireContext()).setCancelable(false).build()
 
@@ -52,6 +53,28 @@ class HomeFragment : Fragment() {
             val intent = Intent(activity, BookingActivity::class.java)
             intent.putExtra(BookingActivity.EXTRA_USER, currentUser)
             startActivity(intent)
+        }
+    }
+
+    private fun loadBookingInformation() {
+        viewModel.getBookingInformation().observe(viewLifecycleOwner) { resource ->
+            when (resource) {
+                is Resource.Loading -> dialog.show()
+                is Resource.Success -> {
+                    dialog.dismiss()
+                    resource.data?.let {
+                        binding.layoutBookingInfo.visibility = View.VISIBLE
+                        binding.tvGarageBookingInfo.text = it.garage.name
+                        binding.tvAddressBookingInfo.text = it.garage.address
+                        binding.tvPackageBookingInfo.text = it.pkg.name
+                        binding.tvTimeBookingInfo.text = "${it.timeSlot.timeSlot} / ${it.date}"
+                    }
+                }
+                is Resource.Error -> {
+                    dialog.dismiss()
+                    Toast.makeText(activity, resource.message, Toast.LENGTH_SHORT).show()
+                }
+            }
         }
     }
 

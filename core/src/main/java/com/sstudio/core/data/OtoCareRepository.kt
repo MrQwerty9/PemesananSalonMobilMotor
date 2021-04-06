@@ -8,6 +8,10 @@ import com.sstudio.core.domain.repository.IOtoCareRepository
 import com.sstudio.core.utils.DataMapper
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.*
+import java.text.DateFormat
+import java.text.ParseException
+import java.text.SimpleDateFormat
+import java.util.*
 
 class OtoCareRepository(
     private val remoteDataSource: RemoteDataSource
@@ -143,10 +147,6 @@ class OtoCareRepository(
             )
         }
 
-    override fun getGarage(id: String): Flow<Resource<Garage>> {
-        return flow { }
-    }
-
     @ExperimentalCoroutinesApi
     override fun getTimeSlot(date: String, garageId: String): Flow<Resource<List<TimeSlot>>> {
         return flow<Resource<List<TimeSlot>>> {
@@ -197,4 +197,38 @@ class OtoCareRepository(
                 }
             }
         }
+
+    override fun getBookingInformation(userPhone: String): Flow<Resource<Booking>> =
+        flow<Resource<Booking>> {
+            emit(Resource.Loading())
+            var booking = Booking()
+            when (val bookingResponse = remoteDataSource.getBookingUser(userPhone).first()) {
+                is ApiResponse.Success -> {
+                    for (response in bookingResponse.data) {
+                        Log.d("mytag", "booking info $response")
+                        if (strToDate(response.date)?.after(Calendar.getInstance().time) == true ||
+                            strToDate(response.date)?.equals(Calendar.getInstance().time) == true
+                        ) {
+
+                            booking = DataMapper.mapBookingResponseToDomain(response)
+                            booking.customer = getUser(response.userPhone).first().data ?: User()
+                        }
+                    }
+                    emit(Resource.Success(booking))
+                }
+                is ApiResponse.Error -> {
+                    emit(Resource.Error(bookingResponse.errorMessage))
+                }
+            }
+        }
+
+    private fun strToDate(date: String): Date? {
+        val df: DateFormat = SimpleDateFormat("MM-dd-yyyy", Locale.getDefault())
+        return try {
+            df.parse(date)
+        } catch (e: ParseException) {
+            e.printStackTrace()
+            null
+        }
+    }
 }
