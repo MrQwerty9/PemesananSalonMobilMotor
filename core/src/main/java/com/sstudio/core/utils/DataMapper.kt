@@ -37,14 +37,10 @@ object DataMapper {
 
     fun mapWorkingHoursResponseToDomain(input: WorkingHoursResponse): TimeSlot =
         TimeSlot(
-            timeSlot = input.time,
+            timeStart = input.start,
+            timeFinish = input.finish,
             id = input.id,
             available = false
-        )
-
-    fun mapTimeSlotResponseToDomain(input: TimeSlotResponse): TimeSlot =
-        TimeSlot(
-            timeSlot = input.slot.toString()
         )
 
     fun mapCityResponseToDomain(input: CityResponse): City =
@@ -65,13 +61,19 @@ object DataMapper {
             packageName = input.pkg.name,
             packageInclude = input.pkg.include,
             packagePrice = input.pkg.price,
-            time = input.timeSlot.timeSlot.toString(),
+            timeStart = input.timeSlot.timeStart,
+            timeFinish = input.timeSlot.timeFinish,
             timeId = input.timeSlot.id.toString()
         )
 
     fun mapBookingResponseToDomain(input: BookingResponse): Booking =
         Booking(
-            timeSlot = TimeSlot(id = input.timeId.toInt(), timeSlot = input.time),
+            id = input.id,
+            timeSlot = TimeSlot(
+                id = input.timeId.toInt(),
+                timeStart = input.timeStart,
+                timeFinish = input.timeFinish
+            ),
             date = input.date,
             pkg = Package(
                 id = input.packageId,

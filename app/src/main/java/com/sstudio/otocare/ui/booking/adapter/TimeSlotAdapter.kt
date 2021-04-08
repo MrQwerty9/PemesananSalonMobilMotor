@@ -47,7 +47,7 @@ class TimeSlotAdapter : RecyclerView.Adapter<TimeSlotAdapter.ViewHolder>() {
         RecyclerView.ViewHolder(binding.root) {
 
         fun bind(timeSlot: TimeSlot, position: Int) {
-            binding.tvTimeSlot.text = timeSlot.timeSlot
+            binding.tvTimeSlot.text = "${timeSlot.timeStart}-${timeSlot.timeFinish}"
             if (timeSlot.available) {
                 if (selectedPosition == position) {
                     itemSelected = timeSlotList[selectedPosition]
@@ -72,7 +72,7 @@ class TimeSlotAdapter : RecyclerView.Adapter<TimeSlotAdapter.ViewHolder>() {
         }
 
         private fun setItemSelected(binding: ItemTimeSlotBinding) {
-            binding.tvTimeSlotStatus.text = "Tersedia"
+            binding.tvTimeSlotStatus.text = context.getString(R.string.available)
             binding.cardTimeSlot.setCardBackgroundColor(
                 ContextCompat.getColor(context, R.color.colorPrimary)
             )
@@ -81,7 +81,7 @@ class TimeSlotAdapter : RecyclerView.Adapter<TimeSlotAdapter.ViewHolder>() {
         }
 
         private fun setItemUnselected(binding: ItemTimeSlotBinding) {
-            binding.tvTimeSlotStatus.text = "Tersedia"
+            binding.tvTimeSlotStatus.text = context.getString(R.string.available)
             binding.tvTimeSlotStatus.setTextColor(
                 ContextCompat.getColor(
                     context,
@@ -98,7 +98,7 @@ class TimeSlotAdapter : RecyclerView.Adapter<TimeSlotAdapter.ViewHolder>() {
         }
 
         private fun setItemFull(binding: ItemTimeSlotBinding) {
-            binding.tvTimeSlotStatus.text = "Full"
+            binding.tvTimeSlotStatus.text = context.getString(R.string.full)
             binding.tvTimeSlotStatus.setTextColor(
                 ContextCompat.getColor(
                     context,

@@ -18,9 +18,7 @@ class BookingViewModel(private val otoCareUseCase: OtoCareUseCase) : ViewModel()
     var savedStateSpinnerCity = 0
     var savedStateItemGarage = -1
     var savedStateItemTimeSlot = -1
-    var dateSelected = MutableLiveData<String>().also {
-        it.value = simpleDateFormat.format(Calendar.getInstance().time)
-    }
+    var dateSelected = MutableLiveData<String>()
     var garageSelected = Garage()
 
     var currentUserAuth = FirebaseAuth.getInstance().currentUser.also {

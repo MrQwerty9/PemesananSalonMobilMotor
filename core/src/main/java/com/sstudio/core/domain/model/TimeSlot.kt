@@ -6,6 +6,7 @@ import kotlinx.parcelize.Parcelize
 @Parcelize
 class TimeSlot(
     var id: Int = 0,
-    var timeSlot: String = "",
+    var timeStart: String = "",
+    var timeFinish: String = "",
     var available: Boolean = true
 ) : Parcelable

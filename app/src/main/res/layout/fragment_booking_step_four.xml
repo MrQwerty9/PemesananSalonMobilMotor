@@ -73,8 +73,7 @@
                         android:layout_height="wrap_content"
                         android:id="@+id/tv_booking_time"
                         android:textSize="14sp"
-                        android:layout_marginStart="4dp"
-                        android:text="10:00 28/03/2019" />
+                        android:layout_marginStart="4dp" />
 
             </LinearLayout>
 
@@ -83,20 +82,18 @@
                     android:layout_height="wrap_content"
                     android:orientation="horizontal">
 
-                <ImageView
-                        android:src="@drawable/ic_account_circle_black_24dp"
+                <TextView
+                        android:text="@string/label_package"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:layout_gravity="bottom"
-                        tools:ignore="contentDescription" />
+                        android:layout_gravity="bottom" />
 
                 <TextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:id="@+id/tv_booking_technician"
+                        android:id="@+id/tv_booking_package"
                         android:textSize="14sp"
-                        android:layout_marginStart="4dp"
-                        android:text="Sholi" />
+                        android:layout_marginStart="4dp" />
 
             </LinearLayout>
 
@@ -111,7 +108,6 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:id="@+id/tv_garage_name"
-                    android:text="Salon#1"
                     android:textStyle="bold" />
 
             <LinearLayout
@@ -131,8 +127,7 @@
                         android:layout_height="wrap_content"
                         android:textSize="14sp"
                         android:id="@+id/tv_phone"
-                        android:layout_marginStart="4dp"
-                        android:text="08567888751" />
+                        android:layout_marginStart="4dp" />
 
             </LinearLayout>
 
@@ -153,8 +148,7 @@
                         android:layout_height="wrap_content"
                         android:id="@+id/tv_time"
                         android:textSize="14sp"
-                        android:layout_marginStart="4dp"
-                        android:text="07:00 - 09:00" />
+                        android:layout_marginStart="4dp" />
 
             </LinearLayout>
 
@@ -175,8 +169,7 @@
                         android:layout_height="wrap_content"
                         android:id="@+id/tv_location"
                         android:textSize="14sp"
-                        android:layout_marginStart="4dp"
-                        android:text="Jl. Ngagel" />
+                        android:layout_marginStart="4dp" />
 
             </LinearLayout>
 

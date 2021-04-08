@@ -160,7 +160,7 @@ class RemoteDataSource(private val db: FirebaseFirestore) {
                 val listIdTimeSlot = ArrayList<String>()
                 snapshot?.let {
                     for (timeSlot in it) {
-                        listIdTimeSlot.add(timeSlot["timeSlotId"].toString())
+                        listIdTimeSlot.add(timeSlot["timeId"].toString())
                     }
                 }
                 offer(ApiResponse.Success(listIdTimeSlot))
@@ -186,6 +186,14 @@ class RemoteDataSource(private val db: FirebaseFirestore) {
             emit(ApiResponse.Error(it.message.toString()))
         }.flowOn(Dispatchers.IO)
 
+    fun setCancelBooking(activeBookingId: String): Flow<ApiResponse<String>> =
+        flow<ApiResponse<String>> {
+            db.collection("Booking").document(activeBookingId).delete().await()
+            emit(ApiResponse.Success(""))
+        }.catch {
+            emit(ApiResponse.Error(it.message.toString()))
+        }.flowOn(Dispatchers.IO)
+
     @ExperimentalCoroutinesApi
     fun getBookingUser(phoneNumber: String): Flow<ApiResponse<List<BookingResponse>>> {
         return callbackFlow<ApiResponse<List<BookingResponse>>> {
@@ -194,7 +202,9 @@ class RemoteDataSource(private val db: FirebaseFirestore) {
                 val listBooking = ArrayList<BookingResponse>()
                 snapshot?.let {
                     for (booking in it) {
-                        listBooking.add(booking.toObject(BookingResponse::class.java))
+                        val data = booking.toObject(BookingResponse::class.java)
+                        data.id = booking.id
+                        listBooking.add(data)
                     }
                 }
                 offer(ApiResponse.Success(listBooking))

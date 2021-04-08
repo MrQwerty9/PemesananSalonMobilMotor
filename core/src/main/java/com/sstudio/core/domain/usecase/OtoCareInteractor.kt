@@ -36,6 +36,9 @@ class OtoCareInteractor(private val iOtoCareRepository: IOtoCareRepository) : Ot
     override fun setBooking(booking: Booking): Flow<Resource<String>> =
         iOtoCareRepository.setBooking(booking)
 
-    override fun getBookingInformation(userPhone: String): Flow<Resource<Booking>> =
+    override fun setCancelBooking(activeBookingId: String): Flow<Resource<String>> =
+        iOtoCareRepository.setCancelBooking(activeBookingId)
+
+    override fun getBookingInformation(userPhone: String): Flow<Resource<Booking?>> =
         iOtoCareRepository.getBookingInformation(userPhone)
 }

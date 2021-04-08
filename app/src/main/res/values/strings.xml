@@ -12,6 +12,10 @@
     <string name="please_wait_resend_code">Harap tunggu beberapa saat lagi untuk mengirim ulang</string>
     <string name="sending_code_verif">Mengirim kode verifikasi</string>
     <string name="enter_verif_code">Masukkan kode verifikasi</string>
+    <string name="available">Tersedia</string>
+    <string name="full">Penuh</string>
+    <string name="already_booking_your_account">Terdapat booking yang aktif di akun anda</string>
+    <string name="booking_has_canceled">Booking berhasil dibatalkan</string>
 
 
 </resources>

@@ -198,34 +198,55 @@ class OtoCareRepository(
             }
         }
 
-    override fun getBookingInformation(userPhone: String): Flow<Resource<Booking>> =
-        flow<Resource<Booking>> {
+    override fun setCancelBooking(activeBookingId: String): Flow<Resource<String>> =
+        flow<Resource<String>> {
             emit(Resource.Loading())
-            var booking = Booking()
-            when (val bookingResponse = remoteDataSource.getBookingUser(userPhone).first()) {
+            when (val userResponse = remoteDataSource.setCancelBooking(activeBookingId).first()) {
                 is ApiResponse.Success -> {
-                    for (response in bookingResponse.data) {
-                        Log.d("mytag", "booking info $response")
-                        if (strToDate(response.date)?.after(Calendar.getInstance().time) == true ||
-                            strToDate(response.date)?.equals(Calendar.getInstance().time) == true
-                        ) {
-
-                            booking = DataMapper.mapBookingResponseToDomain(response)
-                            booking.customer = getUser(response.userPhone).first().data ?: User()
-                        }
-                    }
-                    emit(Resource.Success(booking))
+                    emit(Resource.Success(""))
                 }
                 is ApiResponse.Error -> {
-                    emit(Resource.Error(bookingResponse.errorMessage))
+                    emit(Resource.Error(userResponse.errorMessage))
                 }
             }
         }
 
-    private fun strToDate(date: String): Date? {
-        val df: DateFormat = SimpleDateFormat("MM-dd-yyyy", Locale.getDefault())
+    @ExperimentalCoroutinesApi
+    override fun getBookingInformation(userPhone: String): Flow<Resource<Booking?>> =
+        flow<Resource<Booking?>> {
+            emit(Resource.Loading())
+            emitAll(remoteDataSource.getBookingUser(userPhone).map { bookingResponse ->
+                when (bookingResponse) {
+                    is ApiResponse.Success -> {
+                        var booking: Booking? = null
+                        for (response in bookingResponse.data) {
+                            if (strToDate(
+                                    response.date,
+                                    response.timeFinish
+                                )?.after(Calendar.getInstance().time) == true
+                            ) {
+                                booking = DataMapper.mapBookingResponseToDomain(response)
+                                booking.customer =
+                                    getUser(response.userPhone).first().data ?: User()
+                            }
+                        }
+                        Resource.Success(booking)
+                    }
+                    is ApiResponse.Error -> {
+                        Resource.Error(bookingResponse.errorMessage)
+                    }
+                    is ApiResponse.Empty -> {
+                        Resource.Success(null)
+                    }
+                }
+            })
+        }
+
+
+    private fun strToDate(date: String, time: String): Date? {
+        val df: DateFormat = SimpleDateFormat("dd-MM-yyyy hh:mm:ss", Locale.getDefault())
         return try {
-            df.parse(date)
+            df.parse("$date $time:00")
         } catch (e: ParseException) {
             e.printStackTrace()
             null

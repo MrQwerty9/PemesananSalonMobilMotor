@@ -154,8 +154,9 @@ class BookingStep4Fragment : Fragment() {
 
 
     private fun setData() {
-        binding.tvTime.text = bookingBundle.timeSlot.timeSlot
-        binding.tvBookingTechnician.text = bookingBundle.pkg.name
+        binding.tvTime.text =
+            "${bookingBundle.timeSlot.timeStart}-${bookingBundle.timeSlot.timeFinish}"
+        binding.tvBookingPackage.text = bookingBundle.pkg.name
         binding.tvPhone.text = bookingBundle.customer.phoneNumber
         binding.tvGarageName.text = bookingBundle.garage.name
     }

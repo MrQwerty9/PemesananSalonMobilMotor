@@ -110,6 +110,8 @@ class BookingStep3Fragment : Fragment() {
         val endDate = Calendar.getInstance(TimeZone.getDefault())
         endDate.add(Calendar.DATE, 7)
 
+        viewModel.setDateSelected(startDate.time)
+
         val horizontalCalendar = HorizontalCalendar.Builder(requireActivity(), R.id.calendar_step3)
             .range(startDate, endDate)
             .datesNumberOnScreen(3)

@@ -12,6 +12,7 @@ import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.sstudio.core.data.Resource
 import com.sstudio.core.domain.model.User
+import com.sstudio.otocare.R
 import com.sstudio.otocare.databinding.FragmentHomeBinding
 import com.sstudio.otocare.services.PicassoImageLoadingServices
 import com.sstudio.otocare.ui.booking.BookingActivity
@@ -21,6 +22,7 @@ import dmax.dialog.SpotsDialog
 import org.koin.android.viewmodel.ext.android.viewModel
 import ss.com.bannerslider.Slider
 
+
 class HomeFragment : Fragment() {
 
     private val viewModel: HomeViewModel by viewModel()
@@ -28,6 +30,8 @@ class HomeFragment : Fragment() {
     private val binding get() = _binding!!
     private lateinit var dialog: AlertDialog
     private var currentUser = User()
+    private var alreadyBooking = false
+    private var activeBookingId = ""
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -50,9 +54,49 @@ class HomeFragment : Fragment() {
         dialog = SpotsDialog.Builder().setContext(requireContext()).setCancelable(false).build()
 
         binding.cvBooking.setOnClickListener {
-            val intent = Intent(activity, BookingActivity::class.java)
-            intent.putExtra(BookingActivity.EXTRA_USER, currentUser)
-            startActivity(intent)
+            if (!alreadyBooking) {
+                val intent = Intent(activity, BookingActivity::class.java)
+                intent.putExtra(BookingActivity.EXTRA_USER, currentUser)
+                startActivity(intent)
+            } else {
+                Toast.makeText(
+                    requireContext(),
+                    getString(R.string.already_booking_your_account),
+                    Toast.LENGTH_SHORT
+                ).show()
+            }
+        }
+
+        binding.btnCancel.setOnClickListener {
+            AlertDialog.Builder(requireContext())
+                .setTitle("Batalkan Booking")
+                .setMessage("Apakah anda yakin membatalkan booking?")
+                .setIcon(android.R.drawable.ic_dialog_alert)
+                .setPositiveButton(
+                    android.R.string.yes
+                ) { _, _ ->
+                    viewModel.setCancelBooking(activeBookingId)
+                        .observe(viewLifecycleOwner) { resource ->
+                            when (resource) {
+                                is Resource.Loading -> dialog.show()
+                                is Resource.Success -> {
+                                    dialog.dismiss()
+                                    Toast.makeText(
+                                        requireContext(),
+                                        getString(R.string.booking_has_canceled),
+                                        Toast.LENGTH_SHORT
+                                    ).show()
+                                }
+                                is Resource.Error -> {
+                                    dialog.dismiss()
+                                    Toast.makeText(activity, resource.message, Toast.LENGTH_SHORT)
+                                        .show()
+                                }
+                            }
+                        }
+                }
+                .setNegativeButton(android.R.string.no, null)
+                .show()
         }
     }
 
@@ -62,12 +106,18 @@ class HomeFragment : Fragment() {
                 is Resource.Loading -> dialog.show()
                 is Resource.Success -> {
                     dialog.dismiss()
-                    resource.data?.let {
+                    if (resource.data == null) {
+                        binding.layoutBookingInfo.visibility = View.GONE
+                        alreadyBooking = false
+                    } else {
+                        alreadyBooking = true
+                        activeBookingId = resource.data!!.id
                         binding.layoutBookingInfo.visibility = View.VISIBLE
-                        binding.tvGarageBookingInfo.text = it.garage.name
-                        binding.tvAddressBookingInfo.text = it.garage.address
-                        binding.tvPackageBookingInfo.text = it.pkg.name
-                        binding.tvTimeBookingInfo.text = "${it.timeSlot.timeSlot} / ${it.date}"
+                        binding.tvGarageBookingInfo.text = resource.data?.garage?.name
+                        binding.tvAddressBookingInfo.text = resource.data?.garage?.address
+                        binding.tvPackageBookingInfo.text = resource.data?.pkg?.name
+                        binding.tvTimeBookingInfo.text =
+                            "${resource.data?.timeSlot?.timeStart}-${resource.data?.timeSlot?.timeFinish} / ${resource.data?.date}"
                     }
                 }
                 is Resource.Error -> {

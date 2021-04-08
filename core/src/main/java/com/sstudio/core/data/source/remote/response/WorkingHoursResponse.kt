@@ -6,5 +6,6 @@ import kotlinx.parcelize.Parcelize
 @Parcelize
 class WorkingHoursResponse(
     var id: Int = 0,
-    var time: String = ""
+    var start: String = "",
+    var finish: String = ""
 ) : Parcelable

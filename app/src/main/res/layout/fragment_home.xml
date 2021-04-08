@@ -307,6 +307,18 @@
                         android:id="@+id/tv_package_booking_info"
                         app:layout_constraintStart_toStartOf="@+id/tv_address_booking_info" />
 
+                <Button
+                        android:id="@+id/btn_cancel"
+                        android:layout_width="70dp"
+                        android:layout_height="30dp"
+                        android:layout_margin="10dp"
+                        android:text="Batalkan"
+                        android:textAllCaps="false"
+                        android:textColor="@color/grey"
+                        android:background="@color/transparent"
+                        app:layout_constraintTop_toBottomOf="@+id/tv_package_booking_info"
+                        app:layout_constraintEnd_toEndOf="parent" />
+
             </androidx.constraintlayout.widget.ConstraintLayout>
 
             <ss.com.bannerslider.Slider

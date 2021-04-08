@@ -23,8 +23,11 @@ class HomeViewModel(private val otoCareUseCase: OtoCareUseCase) : ViewModel() {
     fun setUser(user: User): LiveData<Resource<String>> =
         otoCareUseCase.setUser(user).asLiveData()
 
-    fun getBookingInformation(): LiveData<Resource<Booking>> =
+    fun getBookingInformation(): LiveData<Resource<Booking?>> =
         otoCareUseCase.getBookingInformation(userPhone).asLiveData()
+
+    fun setCancelBooking(activeBookingId: String): LiveData<Resource<String>> =
+        otoCareUseCase.setCancelBooking(activeBookingId).asLiveData()
 
     var getUser: LiveData<Resource<User>>? = null
         get() {

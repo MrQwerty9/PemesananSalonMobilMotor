@@ -5,6 +5,7 @@ import kotlinx.parcelize.Parcelize
 
 @Parcelize
 data class Booking(
+    var id: String = "",
     var customer: User = User(),
     var timeSlot: TimeSlot = TimeSlot(),
     var pkg: Package = Package(),

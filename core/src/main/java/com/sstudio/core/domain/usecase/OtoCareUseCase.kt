@@ -20,5 +20,6 @@ interface OtoCareUseCase {
     fun getTimeSlot(date: String, garageId: String): Flow<Resource<List<TimeSlot>>>
 
     fun setBooking(booking: Booking): Flow<Resource<String>>
-    fun getBookingInformation(userPhone: String): Flow<Resource<Booking>>
+    fun setCancelBooking(activeBookingId: String): Flow<Resource<String>>
+    fun getBookingInformation(userPhone: String): Flow<Resource<Booking?>>
 }
