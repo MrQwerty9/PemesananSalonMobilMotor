@@ -5,9 +5,11 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.asLiveData
 import com.google.firebase.auth.FirebaseAuth
+import com.google.firebase.auth.FirebaseUser
 import com.sstudio.core.data.Resource
 import com.sstudio.core.domain.model.Banner
 import com.sstudio.core.domain.model.Booking
+import com.sstudio.core.domain.model.Cart
 import com.sstudio.core.domain.model.User
 import com.sstudio.core.domain.usecase.OtoCareUseCase
 
@@ -15,7 +17,7 @@ class HomeViewModel(private val otoCareUseCase: OtoCareUseCase) : ViewModel() {
 
     var userPhone = ""
 
-    var currentUserAuth = FirebaseAuth.getInstance().currentUser.also {
+    var currentUserAuth: FirebaseUser? = FirebaseAuth.getInstance().currentUser.also {
         if (it?.phoneNumber != null)
             userPhone = it.phoneNumber ?: ""
     }
@@ -58,4 +60,7 @@ class HomeViewModel(private val otoCareUseCase: OtoCareUseCase) : ViewModel() {
             return field
         }
         private set
+
+    fun getCart(): LiveData<Resource<Cart>> =
+        otoCareUseCase.getCart(userPhone).asLiveData()
 }

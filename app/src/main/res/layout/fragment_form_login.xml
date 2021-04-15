@@ -42,12 +42,14 @@
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toEndOf="@+id/code_picker"/>
 
-    <TextView
+    <Button
             android:padding="20dp"
             android:textSize="20sp"
-            android:textColor="@color/putih"
-            android:id="@+id/tv_lewati"
-            android:text="LEWATI"
+            android:textColor="@color/grey"
+            android:id="@+id/btn_skip_login"
+            android:text="Nanti dulu"
+            android:textAllCaps="false"
+            android:background="@color/transparent"
             android:layout_alignParentBottom="true"
             android:layout_centerInParent="true"
             android:layout_width="wrap_content"
@@ -60,13 +62,13 @@
             android:id="@+id/btn_login"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_above="@+id/tv_lewati"
+            android:layout_above="@+id/btn_skip_login"
             android:background="@color/button1"
             android:textColor="@color/putih"
             android:layout_centerInParent="true"
             android:layout_margin="20dp"
             android:text="LOGIN"
-            app:layout_constraintBottom_toTopOf="@+id/tv_lewati"
+            app:layout_constraintBottom_toTopOf="@+id/btn_skip_login"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent" />
 

@@ -8,9 +8,9 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import com.google.firebase.auth.FirebaseAuth
+import com.sstudio.otocare.MainActivity
 import com.sstudio.otocare.R
 import com.sstudio.otocare.databinding.FragmentFormLoginBinding
-import com.sstudio.otocare.ui.home.HomeActivity
 
 class FormLoginFragment : Fragment(), View.OnClickListener {
 
@@ -41,6 +41,9 @@ class FormLoginFragment : Fragment(), View.OnClickListener {
         }
 
         binding.btnLogin.setOnClickListener(this)
+        binding.btnSkipLogin.setOnClickListener {
+            showHomeActivity()
+        }
 
     }
 
@@ -81,7 +84,7 @@ class FormLoginFragment : Fragment(), View.OnClickListener {
     }
 
     private fun showHomeActivity() {
-        val intent = Intent(requireContext(), HomeActivity::class.java)
+        val intent = Intent(requireContext(), MainActivity::class.java)
         startActivity(intent)
         requireActivity().finish()
     }

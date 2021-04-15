@@ -16,6 +16,7 @@
     <string name="full">Penuh</string>
     <string name="already_booking_your_account">Terdapat booking yang aktif di akun anda</string>
     <string name="booking_has_canceled">Booking berhasil dibatalkan</string>
+    <string name="all">Semua</string>
 
 
 </resources>

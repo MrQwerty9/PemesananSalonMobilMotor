@@ -15,9 +15,9 @@ import androidx.fragment.app.Fragment
 import com.google.firebase.FirebaseException
 import com.google.firebase.FirebaseTooManyRequestsException
 import com.google.firebase.auth.*
+import com.sstudio.otocare.MainActivity
 import com.sstudio.otocare.R
 import com.sstudio.otocare.databinding.FragmentVerificationBinding
-import com.sstudio.otocare.ui.home.HomeActivity
 import java.util.concurrent.TimeUnit
 
 
@@ -327,7 +327,7 @@ class VerificationFragment : Fragment(), View.OnClickListener {
     }
 
     private fun showHomeActivity() {
-        val intent = Intent(requireContext(), HomeActivity::class.java)
+        val intent = Intent(requireContext(), MainActivity::class.java)
         startActivity(intent)
         requireActivity().finish()
     }

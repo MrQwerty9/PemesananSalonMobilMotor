@@ -70,7 +70,7 @@ object DataMapper {
         Booking(
             id = input.id,
             timeSlot = TimeSlot(
-                id = input.timeId.toInt(),
+                id = input.timeId.toIntOrNull() ?: 0,
                 timeStart = input.timeStart,
                 timeFinish = input.timeFinish
             ),
@@ -87,5 +87,25 @@ object DataMapper {
                 address = input.garageAddress,
                 phone = input.garagePhone
             ),
+        )
+
+    fun mapProductResponseToDomain(input: ProductResponse): Product =
+        Product(
+            id = input.id,
+            name = input.name,
+            image = input.image,
+            price = input.price.toDoubleOrNull() ?: 0.0,
+            category = input.category.toIntOrNull() ?: 0
+        )
+
+    fun mapCategoryProductResponseToDomain(input: CategoryProductResponse): CategoryProduct =
+        CategoryProduct(
+            id = input.id.toIntOrNull() ?: 0,
+            name = input.name
+        )
+
+    fun mapCartResponseToDomain(input: CartResponse): Cart =
+        Cart(
+            productId = input.productId,
         )
 }

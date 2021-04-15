@@ -12,6 +12,7 @@ import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.sstudio.core.data.Resource
 import com.sstudio.core.domain.model.User
+import com.sstudio.otocare.MainActivity
 import com.sstudio.otocare.R
 import com.sstudio.otocare.databinding.FragmentHomeBinding
 import com.sstudio.otocare.services.PicassoImageLoadingServices
@@ -50,6 +51,7 @@ class HomeFragment : Fragment() {
         loadBanner()
         loadLookBook()
         loadBookingInformation()
+        loadCart()
 
         dialog = SpotsDialog.Builder().setContext(requireContext()).setCancelable(false).build()
 
@@ -167,8 +169,34 @@ class HomeFragment : Fragment() {
         }
     }
 
+    private fun loadCart() {
+        viewModel.getCart().observe(viewLifecycleOwner) { resource ->
+            when (resource) {
+                is Resource.Loading -> {
+                }
+                is Resource.Success -> {
+                    resource.data?.let {
+                        if (it.productId.isNotEmpty()) {
+                            binding.cartBadge.visibility = View.VISIBLE
+                            if (it.productId.size > 99)
+                                binding.cartBadge.text = "99"
+                            else
+                                binding.cartBadge.text = it.productId.size.toString()
+                        } else {
+                            binding.cartBadge.visibility = View.GONE
+                        }
+                    }
+                }
+                is Resource.Error -> {
+                    dialog.dismiss()
+                    Toast.makeText(activity, resource.message, Toast.LENGTH_SHORT).show()
+                }
+            }
+        }
+    }
+
     private fun setUserInformation() {
-        HomeActivity.currentUser.observe(viewLifecycleOwner) {
+        MainActivity.currentUser.observe(viewLifecycleOwner) {
             binding.tvUserName.text = it.name
             currentUser = it
         }

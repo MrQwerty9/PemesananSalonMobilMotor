@@ -16,7 +16,7 @@
             android:theme="@style/AppTheme">
         <activity android:name="com.sstudio.otocare.ui.login.LoginActivity"></activity>
         <activity android:name="com.sstudio.otocare.ui.booking.BookingActivity" />
-        <activity android:name="com.sstudio.otocare.ui.home.HomeActivity" />
+        <activity android:name="com.sstudio.otocare.MainActivity" />
 
         <activity android:name="com.sstudio.otocare.SplashScreen">
             <intent-filter>

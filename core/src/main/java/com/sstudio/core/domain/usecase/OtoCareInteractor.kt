@@ -41,4 +41,16 @@ class OtoCareInteractor(private val iOtoCareRepository: IOtoCareRepository) : Ot
 
     override fun getBookingInformation(userPhone: String): Flow<Resource<Booking?>> =
         iOtoCareRepository.getBookingInformation(userPhone)
+
+    override fun getProduct(category: Int): Flow<Resource<List<Product>>> =
+        iOtoCareRepository.getProduct(category)
+
+    override fun getCategoryProduct(): Flow<Resource<List<CategoryProduct>>> =
+        iOtoCareRepository.getCategoryProduct()
+
+    override fun getCart(userPhone: String): Flow<Resource<Cart>> =
+        iOtoCareRepository.getCart(userPhone)
+
+    override fun setCart(userPhone: String, productId: String): Flow<Resource<String>> =
+        iOtoCareRepository.setCart(userPhone, productId)
 }

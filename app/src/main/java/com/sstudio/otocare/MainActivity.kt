@@ -1,7 +1,6 @@
-package com.sstudio.otocare.ui.home
+package com.sstudio.otocare
 
 import android.app.AlertDialog
-import android.content.Intent
 import android.os.Bundle
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
@@ -12,20 +11,19 @@ import androidx.navigation.ui.NavigationUI
 import com.google.android.material.bottomsheet.BottomSheetDialog
 import com.sstudio.core.data.Resource
 import com.sstudio.core.domain.model.User
-import com.sstudio.otocare.R
-import com.sstudio.otocare.databinding.ActivityHomeBinding
+import com.sstudio.otocare.databinding.ActivityMainBinding
 import com.sstudio.otocare.databinding.LayoutUpdateInformationBinding
-import com.sstudio.otocare.ui.login.LoginActivity
+import com.sstudio.otocare.ui.home.HomeViewModel
 import dmax.dialog.SpotsDialog
 import org.koin.android.viewmodel.ext.android.viewModel
 
 
-class HomeActivity : AppCompatActivity() {
+class MainActivity : AppCompatActivity() {
 
     lateinit var bottomSheetDialog: BottomSheetDialog
     lateinit var dialog: AlertDialog
     private var isLogin = false
-    private lateinit var binding: ActivityHomeBinding
+    private lateinit var binding: ActivityMainBinding
     private val viewModel: HomeViewModel by viewModel()
 
     companion object {
@@ -34,7 +32,7 @@ class HomeActivity : AppCompatActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        binding = ActivityHomeBinding.inflate(layoutInflater)
+        binding = ActivityMainBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
         dialog = SpotsDialog.Builder().setContext(this).setCancelable(false).build()
@@ -52,8 +50,9 @@ class HomeActivity : AppCompatActivity() {
     }
 
     private fun checkCurrentUser() {
-        val userPhone = viewModel.currentUserAuth.phoneNumber
-        if (userPhone != null) {
+        viewModel.currentUserAuth
+        val userPhone = viewModel.userPhone
+        if (userPhone != "") {
             isLogin = true
 
             viewModel.getUser?.observe(this) { resource ->
@@ -74,8 +73,6 @@ class HomeActivity : AppCompatActivity() {
                     }
                 }
             }
-        } else {
-            startActivity(Intent(this, LoginActivity::class.java))
         }
         dialog.dismiss()
     }

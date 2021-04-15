@@ -22,4 +22,10 @@ interface OtoCareUseCase {
     fun setBooking(booking: Booking): Flow<Resource<String>>
     fun setCancelBooking(activeBookingId: String): Flow<Resource<String>>
     fun getBookingInformation(userPhone: String): Flow<Resource<Booking?>>
+
+    fun getProduct(category: Int): Flow<Resource<List<Product>>>
+    fun getCategoryProduct(): Flow<Resource<List<CategoryProduct>>>
+
+    fun getCart(userPhone: String): Flow<Resource<Cart>>
+    fun setCart(userPhone: String, productId: String): Flow<Resource<String>>
 }

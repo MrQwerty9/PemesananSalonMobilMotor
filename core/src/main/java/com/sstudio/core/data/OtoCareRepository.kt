@@ -3,6 +3,7 @@ package com.sstudio.core.data
 import android.util.Log
 import com.sstudio.core.data.source.remote.RemoteDataSource
 import com.sstudio.core.data.source.remote.network.ApiResponse
+import com.sstudio.core.data.source.remote.response.ProductResponse
 import com.sstudio.core.domain.model.*
 import com.sstudio.core.domain.repository.IOtoCareRepository
 import com.sstudio.core.utils.DataMapper
@@ -237,6 +238,88 @@ class OtoCareRepository(
                     }
                     is ApiResponse.Empty -> {
                         Resource.Success(null)
+                    }
+                }
+            })
+        }
+
+    @ExperimentalCoroutinesApi
+    override fun getProduct(category: Int): Flow<Resource<List<Product>>> =
+        flow<Resource<List<Product>>> {
+            val dataResponse: Flow<ApiResponse<List<ProductResponse>>> = if (category != 0) {
+                remoteDataSource.getProductByCategory(category)
+            } else {
+                remoteDataSource.getAllProduct()
+            }
+            emit(Resource.Loading())
+            emitAll(dataResponse.map { response ->
+                when (response) {
+                    is ApiResponse.Success -> {
+                        Resource.Success(
+                            response.data.map {
+                                DataMapper.mapProductResponseToDomain(it)
+                            }
+                        )
+                    }
+                    is ApiResponse.Error -> {
+                        Resource.Error(response.errorMessage)
+                    }
+                    is ApiResponse.Empty -> {
+                        Resource.Success(listOf())
+                    }
+                }
+            })
+        }
+
+    override fun getCategoryProduct(): Flow<Resource<List<CategoryProduct>>> =
+        flow<Resource<List<CategoryProduct>>> {
+            emit(Resource.Loading())
+            when (val userResponse = remoteDataSource.getCategoryProduct().first()) {
+                is ApiResponse.Success -> {
+                    emit(Resource.Success(userResponse.data.map {
+                        DataMapper.mapCategoryProductResponseToDomain(it)
+                    }))
+                }
+                is ApiResponse.Error -> {
+                    emit(Resource.Error(userResponse.errorMessage))
+                }
+            }
+        }
+
+    @ExperimentalCoroutinesApi
+    override fun getCart(userPhone: String): Flow<Resource<Cart>> =
+        flow<Resource<Cart>> {
+            emit(Resource.Loading())
+            emitAll(remoteDataSource.getCart(userPhone).map { response ->
+                when (response) {
+                    is ApiResponse.Success -> {
+                        Resource.Success(
+                            DataMapper.mapCartResponseToDomain(response.data)
+                        )
+                    }
+                    is ApiResponse.Error -> {
+                        Resource.Error(response.errorMessage)
+                    }
+                    is ApiResponse.Empty -> {
+                        Resource.Success(Cart())
+                    }
+                }
+            })
+        }
+
+    override fun setCart(userPhone: String, productId: String): Flow<Resource<String>> =
+        flow<Resource<String>> {
+            emit(Resource.Loading())
+            emitAll(remoteDataSource.setCart(userPhone, productId).map { response ->
+                when (response) {
+                    is ApiResponse.Success -> {
+                        Resource.Success("")
+                    }
+                    is ApiResponse.Error -> {
+                        Resource.Error(response.errorMessage)
+                    }
+                    is ApiResponse.Empty -> {
+                        Resource.Success("")
                     }
                 }
             })

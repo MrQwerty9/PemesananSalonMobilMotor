@@ -51,7 +51,7 @@ class PackageAdapter :
         fun bind(pkg: Package) {
             binding.tvPackageName.text = pkg.name
             binding.tvPackagePrice.text = "Rp.${pkg.price}"
-            Picasso.get().load(pkg.image).into(binding.imageView)
+            Picasso.get().load(pkg.image).into(binding.ivPackage)
             if (pkg.popular)
                 binding.tvPopular.visibility = View.VISIBLE
 

@@ -1,5 +1,6 @@
 package com.sstudio.core.data.source.remote
 
+import com.google.firebase.firestore.FieldValue
 import com.google.firebase.firestore.FirebaseFirestore
 import com.sstudio.core.data.source.remote.network.ApiResponse
 import com.sstudio.core.data.source.remote.response.*
@@ -242,5 +243,117 @@ class RemoteDataSource(private val db: FirebaseFirestore) {
             emit(ApiResponse.Error(it.message.toString()))
         }.flowOn(Dispatchers.IO)
     }
+
+    fun getCategoryProduct(): Flow<ApiResponse<List<CategoryProductResponse>>> {
+        return flow<ApiResponse<List<CategoryProductResponse>>> {
+            val docRef = db.collection("CategoryProduct")
+            val snapshot = docRef.get().await()
+            val list = ArrayList<CategoryProductResponse>()
+            for (i in snapshot) {
+                val data =
+                    i.toObject(CategoryProductResponse::class.java)
+                data.id = i.id
+                list.add(data)
+            }
+            emit(ApiResponse.Success(list))
+        }.catch {
+            emit(ApiResponse.Error(it.message.toString()))
+        }.flowOn(Dispatchers.IO)
+    }
+
+    @ExperimentalCoroutinesApi
+    fun getAllProduct(): Flow<ApiResponse<List<ProductResponse>>> {
+        return callbackFlow<ApiResponse<List<ProductResponse>>> {
+            val docRef = db.collection("Product")
+            val listener = docRef.addSnapshotListener { snapshot, exception ->
+                val listBooking = ArrayList<ProductResponse>()
+                snapshot?.let {
+                    for (i in it) {
+                        val data = i.toObject(ProductResponse::class.java)
+                        data.id = i.id
+                        listBooking.add(data)
+                    }
+                }
+                offer(ApiResponse.Success(listBooking))
+
+                exception?.let {
+                    offer(ApiResponse.Error(it.message.toString()))
+                    cancel()
+                }
+            }
+            awaitClose {
+                listener.remove()
+                cancel()
+            }
+        }.flowOn(Dispatchers.IO)
+    }
+
+    @ExperimentalCoroutinesApi
+    fun getProductByCategory(category: Int): Flow<ApiResponse<List<ProductResponse>>> {
+        return callbackFlow<ApiResponse<List<ProductResponse>>> {
+            val docRef = db.collection("Product").whereEqualTo("category", category.toString())
+            val listener = docRef.addSnapshotListener { snapshot, exception ->
+                val list = ArrayList<ProductResponse>()
+                snapshot?.let {
+                    for (i in it) {
+                        val data = i.toObject(ProductResponse::class.java)
+                        data.id = i.id
+                        list.add(data)
+                    }
+                }
+                offer(ApiResponse.Success(list))
+
+                exception?.let {
+                    offer(ApiResponse.Error(it.message.toString()))
+                    cancel()
+                }
+            }
+            awaitClose {
+                listener.remove()
+                cancel()
+            }
+        }.flowOn(Dispatchers.IO)
+    }
+
+    @ExperimentalCoroutinesApi
+    fun getCart(userPhone: String): Flow<ApiResponse<CartResponse>> {
+        return callbackFlow<ApiResponse<CartResponse>> {
+            val docRef = db.collection("CartUser").document(userPhone)
+            val listener = docRef.addSnapshotListener { snapshot, exception ->
+
+                snapshot?.let {
+
+                    val data = it.toObject(CartResponse::class.java)
+                    if (data != null) {
+                        offer(ApiResponse.Success(data))
+                    } else {
+                        offer(ApiResponse.Empty)
+                    }
+                }
+
+
+                exception?.let {
+                    offer(ApiResponse.Error(it.message.toString()))
+                    cancel()
+                }
+            }
+            awaitClose {
+                listener.remove()
+                cancel()
+            }
+        }.flowOn(Dispatchers.IO)
+    }
+
+    fun setCart(userPhone: String, productId: String): Flow<ApiResponse<String>> =
+        flow<ApiResponse<String>> {
+            val docRef = db.collection("CartUser").document(userPhone)
+            if (!docRef.get().await().exists()) {
+                docRef.set(CartResponse()).await() //create empty doc
+            }
+            docRef.update("productId", FieldValue.arrayUnion(productId)).await()
+            emit(ApiResponse.Success(""))
+        }.catch {
+            emit(ApiResponse.Error(it.message.toString()))
+        }.flowOn(Dispatchers.IO)
 }
 
