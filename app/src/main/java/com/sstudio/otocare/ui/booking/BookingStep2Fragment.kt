@@ -43,10 +43,7 @@ class BookingStep2Fragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        (activity as AppCompatActivity?)?.setSupportActionBar(binding.toolbar)
-        (activity as AppCompatActivity?)?.supportActionBar?.setDisplayHomeAsUpEnabled(true)
-        (activity as BookingActivity?)?.setStep(1)
-        binding.toolbar.title = "Pilih Lokasi"
+        setToolbar()
         bookingBundle = BookingStep2FragmentArgs.fromBundle(requireArguments()).booking
         dialog = SpotsDialog.Builder().setContext(activity).setCancelable(false).build()
         currentUser = requireActivity().intent.getParcelableExtra(BookingActivity.EXTRA_USER)
@@ -54,6 +51,14 @@ class BookingStep2Fragment : Fragment() {
         initView()
         loadAllCityOfGarage()
         loadBranchOfCity()
+    }
+
+    private fun setToolbar() {
+        (activity as AppCompatActivity?)?.setSupportActionBar(binding.toolbar)
+        (activity as AppCompatActivity?)?.supportActionBar?.setDisplayHomeAsUpEnabled(true)
+        (activity as BookingActivity?)?.setStep(1)
+        (activity as AppCompatActivity?)?.supportActionBar?.title =
+            getString(R.string.choose_location)
     }
 
     private fun initView() {

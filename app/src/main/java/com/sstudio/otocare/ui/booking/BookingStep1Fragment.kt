@@ -61,7 +61,8 @@ class BookingStep1Fragment : Fragment() {
         (activity as AppCompatActivity?)?.setSupportActionBar(binding.toolbar)
         (activity as AppCompatActivity?)?.supportActionBar?.setDisplayHomeAsUpEnabled(true)
         (activity as BookingActivity?)?.setStep(0)
-        binding.toolbar.title = "Pilih Paket"
+        (activity as AppCompatActivity?)?.supportActionBar?.title =
+            getString(R.string.choose_package)
     }
 
     private fun loadAllPackage() {

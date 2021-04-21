@@ -17,6 +17,7 @@ import com.sstudio.otocare.R
 import com.sstudio.otocare.databinding.FragmentHomeBinding
 import com.sstudio.otocare.services.PicassoImageLoadingServices
 import com.sstudio.otocare.ui.booking.BookingActivity
+import com.sstudio.otocare.ui.cart.CartActivity
 import com.sstudio.otocare.ui.home.adapter.HomeSliderAdapter
 import com.sstudio.otocare.ui.home.adapter.LookBookAdapter
 import dmax.dialog.SpotsDialog
@@ -30,7 +31,7 @@ class HomeFragment : Fragment() {
     private var _binding: FragmentHomeBinding? = null
     private val binding get() = _binding!!
     private lateinit var dialog: AlertDialog
-    private var currentUser = User()
+    private var currentUser: User? = null
     private var alreadyBooking = false
     private var activeBookingId = ""
 
@@ -56,7 +57,7 @@ class HomeFragment : Fragment() {
         dialog = SpotsDialog.Builder().setContext(requireContext()).setCancelable(false).build()
 
         binding.cvBooking.setOnClickListener {
-            if (!alreadyBooking) {
+            if (!alreadyBooking && currentUser != null) {
                 val intent = Intent(activity, BookingActivity::class.java)
                 intent.putExtra(BookingActivity.EXTRA_USER, currentUser)
                 startActivity(intent)
@@ -69,13 +70,18 @@ class HomeFragment : Fragment() {
             }
         }
 
+        binding.cvCart.setOnClickListener {
+            val intent = Intent(activity, CartActivity::class.java)
+            startActivity(intent)
+        }
+
         binding.btnCancel.setOnClickListener {
             AlertDialog.Builder(requireContext())
                 .setTitle("Batalkan Booking")
                 .setMessage("Apakah anda yakin membatalkan booking?")
                 .setIcon(android.R.drawable.ic_dialog_alert)
                 .setPositiveButton(
-                    android.R.string.yes
+                    getString(R.string.yes)
                 ) { _, _ ->
                     viewModel.setCancelBooking(activeBookingId)
                         .observe(viewLifecycleOwner) { resource ->
@@ -97,7 +103,7 @@ class HomeFragment : Fragment() {
                             }
                         }
                 }
-                .setNegativeButton(android.R.string.no, null)
+                .setNegativeButton(getString(R.string.no), null)
                 .show()
         }
     }
@@ -176,12 +182,12 @@ class HomeFragment : Fragment() {
                 }
                 is Resource.Success -> {
                     resource.data?.let {
-                        if (it.productId.isNotEmpty()) {
+                        if (it.isNotEmpty()) {
                             binding.cartBadge.visibility = View.VISIBLE
-                            if (it.productId.size > 99)
+                            if (it.size > 99)
                                 binding.cartBadge.text = "99"
                             else
-                                binding.cartBadge.text = it.productId.size.toString()
+                                binding.cartBadge.text = it.size.toString()
                         } else {
                             binding.cartBadge.visibility = View.GONE
                         }

@@ -17,6 +17,12 @@
     <string name="already_booking_your_account">Terdapat booking yang aktif di akun anda</string>
     <string name="booking_has_canceled">Booking berhasil dibatalkan</string>
     <string name="all">Semua</string>
+    <string name="booking">Pesan</string>
+    <string name="no">Tidak</string>
+    <string name="yes">Ya</string>
+    <string name="choose_package">Pilih Paket</string>
+    <string name="choose_location">Pilih Lokasi</string>
+    <string name="cart">Keranjang</string>
 
 
 </resources>

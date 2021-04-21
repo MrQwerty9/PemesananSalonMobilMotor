@@ -2,43 +2,35 @@
 <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
         xmlns:app="http://schemas.android.com/apk/res-auto"
         xmlns:tools="http://schemas.android.com/tools"
-        android:id="@+id/fragment_booking_step_two"
         android:layout_width="match_parent"
-        android:layout_height="match_parent">
+        android:layout_height="match_parent"
+        android:orientation="vertical"
+        tools:context=".ui.cart.CartActivity">
 
     <androidx.appcompat.widget.Toolbar
             android:id="@+id/toolbar"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:background="@color/colorPrimary"
-            app:titleTextColor="@color/white"
-            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintTop_toTopOf="parent" />
-
-    <com.jaredrummler.materialspinner.MaterialSpinner
-            android:id="@+id/spin_booking_step_one"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            app:layout_constraintTop_toBottomOf="@+id/toolbar"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintEnd_toEndOf="parent" />
+            app:layout_constraintStart_toStartOf="parent" />
 
     <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_margin="5dp"
-            app:layout_constraintTop_toBottomOf="@+id/spin_booking_step_one"
-            app:layout_constraintBottom_toTopOf="@+id/layout_btn"
-            app:layout_constraintStart_toStartOf="parent"
+            android:layout_height="0dp"
+            android:orientation="vertical"
+            android:id="@+id/linearLayout"
+            app:layout_constraintTop_toBottomOf="@+id/toolbar"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintVertical_bias="0">
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintBottom_toTopOf="@+id/layout_btn">
 
         <androidx.recyclerview.widget.RecyclerView
-                android:id="@+id/rv_garage"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                tools:listitem="@layout/item_garage" />
+                android:id="@+id/rv_cart"
+                tools:listitem="@layout/item_cart" />
     </LinearLayout>
 
     <androidx.cardview.widget.CardView
@@ -54,16 +46,16 @@
         <Button
                 android:layout_width="100dp"
                 android:layout_height="35dp"
-                android:id="@+id/btn_next_step"
-                android:enabled="false"
-                android:text="Next"
+                android:id="@+id/btn_booking"
+                android:text="@string/booking"
                 android:layout_gravity="end"
                 android:layout_margin="15dp"
                 android:textAllCaps="false"
                 android:textColor="@color/white"
-                android:background="@drawable/button_disabled_radius"
+                android:background="@drawable/button_primary_radius"
                 android:layout_marginStart="5dp"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toEndOf="parent" />
     </androidx.cardview.widget.CardView>
+
 </androidx.constraintlayout.widget.ConstraintLayout>

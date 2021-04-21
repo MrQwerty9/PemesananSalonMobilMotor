@@ -61,6 +61,6 @@ class HomeViewModel(private val otoCareUseCase: OtoCareUseCase) : ViewModel() {
         }
         private set
 
-    fun getCart(): LiveData<Resource<Cart>> =
+    fun getCart(): LiveData<Resource<List<Cart>>> =
         otoCareUseCase.getCart(userPhone).asLiveData()
 }

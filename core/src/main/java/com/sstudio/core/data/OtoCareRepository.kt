@@ -13,6 +13,7 @@ import java.text.DateFormat
 import java.text.ParseException
 import java.text.SimpleDateFormat
 import java.util.*
+import kotlin.collections.ArrayList
 
 class OtoCareRepository(
     private val remoteDataSource: RemoteDataSource
@@ -244,7 +245,7 @@ class OtoCareRepository(
         }
 
     @ExperimentalCoroutinesApi
-    override fun getProduct(category: Int): Flow<Resource<List<Product>>> =
+    override fun getProducts(category: Int): Flow<Resource<List<Product>>> =
         flow<Resource<List<Product>>> {
             val dataResponse: Flow<ApiResponse<List<ProductResponse>>> = if (category != 0) {
                 remoteDataSource.getProductByCategory(category)
@@ -271,6 +272,25 @@ class OtoCareRepository(
             })
         }
 
+    override fun getProductById(productId: String): Flow<Resource<Product>> {
+        return remoteDataSource.getProduct(productId).map { response ->
+            Resource.Loading<Resource<Product>>()
+            when (response) {
+                is ApiResponse.Success -> {
+                    Resource.Success(
+                        DataMapper.mapProductResponseToDomain(response.data)
+                    )
+                }
+                is ApiResponse.Error -> {
+                    Resource.Error(response.errorMessage)
+                }
+                is ApiResponse.Empty -> {
+                    Resource.Success(Product())
+                }
+            }
+        }
+    }
+
     override fun getCategoryProduct(): Flow<Resource<List<CategoryProduct>>> =
         flow<Resource<List<CategoryProduct>>> {
             emit(Resource.Loading())
@@ -287,30 +307,69 @@ class OtoCareRepository(
         }
 
     @ExperimentalCoroutinesApi
-    override fun getCart(userPhone: String): Flow<Resource<Cart>> =
-        flow<Resource<Cart>> {
+    override fun getCart(userPhone: String): Flow<Resource<List<Cart>>> =
+        remoteDataSource.getCart(userPhone).map { response ->
+            Resource.Loading<List<Cart>>()
+            when (response) {
+                is ApiResponse.Success -> {
+                    val listCart = ArrayList<Cart>()
+                    for (i in response.data) {
+                        val product = getProductById(i.productId).map {
+                            Cart((it.data) ?: Product(), i.qty)
+                        }.first()
+                        listCart.add(product)
+                    }
+                    Resource.Success(listCart)
+                }
+                is ApiResponse.Error -> {
+                    Resource.Error(response.errorMessage)
+                }
+                is ApiResponse.Empty -> {
+                    Resource.Success(listOf())
+                }
+            }
+        }
+
+    override fun setCart(userPhone: String, cart: Cart): Flow<Resource<String>> =
+        flow<Resource<String>> {
             emit(Resource.Loading())
-            emitAll(remoteDataSource.getCart(userPhone).map { response ->
+            emitAll(remoteDataSource.setCart(userPhone, cart.product.id, cart.qty).map { response ->
                 when (response) {
                     is ApiResponse.Success -> {
-                        Resource.Success(
-                            DataMapper.mapCartResponseToDomain(response.data)
-                        )
+                        Resource.Success("")
                     }
                     is ApiResponse.Error -> {
                         Resource.Error(response.errorMessage)
                     }
                     is ApiResponse.Empty -> {
-                        Resource.Success(Cart())
+                        Resource.Success("")
                     }
                 }
             })
         }
 
-    override fun setCart(userPhone: String, productId: String): Flow<Resource<String>> =
+    override fun addCart(userPhone: String, productId: String): Flow<Resource<String>> =
         flow<Resource<String>> {
             emit(Resource.Loading())
-            emitAll(remoteDataSource.setCart(userPhone, productId).map { response ->
+            emitAll(remoteDataSource.addCart(userPhone, productId).map { response ->
+                when (response) {
+                    is ApiResponse.Success -> {
+                        Resource.Success("")
+                    }
+                    is ApiResponse.Error -> {
+                        Resource.Error(response.errorMessage)
+                    }
+                    is ApiResponse.Empty -> {
+                        Resource.Success("")
+                    }
+                }
+            })
+        }
+
+    override fun deleteCart(userPhone: String, cart: Cart): Flow<Resource<String>> =
+        flow<Resource<String>> {
+            emit(Resource.Loading())
+            emitAll(remoteDataSource.deleteCart(userPhone, cart).map { response ->
                 when (response) {
                     is ApiResponse.Success -> {
                         Resource.Success("")

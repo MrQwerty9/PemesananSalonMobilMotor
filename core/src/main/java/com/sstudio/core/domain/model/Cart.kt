@@ -1,5 +1,6 @@
 package com.sstudio.core.domain.model
 
 data class Cart(
-    val productId: List<String> = listOf()
+    val product: Product = Product(),
+    var qty: Int = 0
 )

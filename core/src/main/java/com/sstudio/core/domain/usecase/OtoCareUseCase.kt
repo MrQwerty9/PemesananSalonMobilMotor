@@ -26,6 +26,8 @@ interface OtoCareUseCase {
     fun getProduct(category: Int): Flow<Resource<List<Product>>>
     fun getCategoryProduct(): Flow<Resource<List<CategoryProduct>>>
 
-    fun getCart(userPhone: String): Flow<Resource<Cart>>
-    fun setCart(userPhone: String, productId: String): Flow<Resource<String>>
+    fun getCart(userPhone: String): Flow<Resource<List<Cart>>>
+    fun setCart(userPhone: String, cart: Cart): Flow<Resource<String>>
+    fun addCart(userPhone: String, productId: String): Flow<Resource<String>>
+    fun deleteCart(userPhone: String, cart: Cart): Flow<Resource<String>>
 }

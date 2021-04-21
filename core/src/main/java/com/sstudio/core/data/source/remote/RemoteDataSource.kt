@@ -4,6 +4,7 @@ import com.google.firebase.firestore.FieldValue
 import com.google.firebase.firestore.FirebaseFirestore
 import com.sstudio.core.data.source.remote.network.ApiResponse
 import com.sstudio.core.data.source.remote.response.*
+import com.sstudio.core.domain.model.Cart
 import com.sstudio.core.domain.model.User
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.ExperimentalCoroutinesApi
@@ -261,6 +262,19 @@ class RemoteDataSource(private val db: FirebaseFirestore) {
         }.flowOn(Dispatchers.IO)
     }
 
+    fun getProduct(productId: String): Flow<ApiResponse<ProductResponse>> {
+        return flow<ApiResponse<ProductResponse>> {
+            val docRef = db.collection("Product").document(productId)
+            val snapshot = docRef.get().await()
+            val data = snapshot.toObject(ProductResponse::class.java)
+            data?.id = snapshot.id
+            emit(ApiResponse.Success(data ?: ProductResponse()))
+
+        }.catch {
+            emit(ApiResponse.Error(it.message.toString()))
+        }.flowOn(Dispatchers.IO)
+    }
+
     @ExperimentalCoroutinesApi
     fun getAllProduct(): Flow<ApiResponse<List<ProductResponse>>> {
         return callbackFlow<ApiResponse<List<ProductResponse>>> {
@@ -316,21 +330,23 @@ class RemoteDataSource(private val db: FirebaseFirestore) {
     }
 
     @ExperimentalCoroutinesApi
-    fun getCart(userPhone: String): Flow<ApiResponse<CartResponse>> {
-        return callbackFlow<ApiResponse<CartResponse>> {
-            val docRef = db.collection("CartUser").document(userPhone)
+    fun getCart(userPhone: String): Flow<ApiResponse<List<CartResponse>>> {
+        return callbackFlow<ApiResponse<List<CartResponse>>> {
+            val docRef = db.collection("CartUser").document(userPhone).collection("Product")
             val listener = docRef.addSnapshotListener { snapshot, exception ->
 
                 snapshot?.let {
-
-                    val data = it.toObject(CartResponse::class.java)
-                    if (data != null) {
-                        offer(ApiResponse.Success(data))
+                    val list = ArrayList<CartResponse>()
+                    for (i in it) {
+                        val data = i.toObject(CartResponse::class.java)
+                        list.add(data)
+                    }
+                    if (list.isNotEmpty()) {
+                        offer(ApiResponse.Success(list))
                     } else {
                         offer(ApiResponse.Empty)
                     }
                 }
-
 
                 exception?.let {
                     offer(ApiResponse.Error(it.message.toString()))
@@ -344,13 +360,40 @@ class RemoteDataSource(private val db: FirebaseFirestore) {
         }.flowOn(Dispatchers.IO)
     }
 
-    fun setCart(userPhone: String, productId: String): Flow<ApiResponse<String>> =
+    fun setCart(userPhone: String, productId: String, qty: Int): Flow<ApiResponse<String>> =
         flow<ApiResponse<String>> {
-            val docRef = db.collection("CartUser").document(userPhone)
+            val docRef = db.collection("CartUser").document(userPhone).collection("Product")
+                .document(productId)
+
             if (!docRef.get().await().exists()) {
-                docRef.set(CartResponse()).await() //create empty doc
+                docRef.set(CartResponse(productId = productId, qty = qty)).await() //create new doc
+            } else {
+                docRef.update("qty", qty).await()
             }
-            docRef.update("productId", FieldValue.arrayUnion(productId)).await()
+            emit(ApiResponse.Success(""))
+        }.catch {
+            emit(ApiResponse.Error(it.message.toString()))
+        }.flowOn(Dispatchers.IO)
+
+    fun addCart(userPhone: String, productId: String): Flow<ApiResponse<String>> =
+        flow<ApiResponse<String>> {
+            val docRef = db.collection("CartUser").document(userPhone).collection("Product")
+                .document(productId)
+
+            if (!docRef.get().await().exists()) {
+                docRef.set(CartResponse(productId = productId, qty = 1)).await() //create new doc
+            } else {
+                docRef.update("qty", FieldValue.increment(1.toLong())).await()
+            }
+            emit(ApiResponse.Success(""))
+        }.catch {
+            emit(ApiResponse.Error(it.message.toString()))
+        }.flowOn(Dispatchers.IO)
+
+    fun deleteCart(userPhone: String, cart: Cart): Flow<ApiResponse<String>> =
+        flow<ApiResponse<String>> {
+            val docRef = db.collection("CartUser").document(userPhone).collection("Product")
+                .document(cart.product.id).delete().await()
             emit(ApiResponse.Success(""))
         }.catch {
             emit(ApiResponse.Error(it.message.toString()))

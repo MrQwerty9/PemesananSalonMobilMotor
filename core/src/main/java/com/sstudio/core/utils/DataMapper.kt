@@ -104,8 +104,4 @@ object DataMapper {
             name = input.name
         )
 
-    fun mapCartResponseToDomain(input: CartResponse): Cart =
-        Cart(
-            productId = input.productId,
-        )
 }

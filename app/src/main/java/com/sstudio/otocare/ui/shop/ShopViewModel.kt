@@ -33,6 +33,6 @@ class ShopViewModel(private val otoCareUseCase: OtoCareUseCase) : ViewModel() {
         }
         private set
 
-    fun setCart(productId: String): LiveData<Resource<String>> =
-        otoCareUseCase.setCart(userPhone, productId).asLiveData()
+    fun addCart(productId: String): LiveData<Resource<String>> =
+        otoCareUseCase.addCart(userPhone, productId).asLiveData()
 }

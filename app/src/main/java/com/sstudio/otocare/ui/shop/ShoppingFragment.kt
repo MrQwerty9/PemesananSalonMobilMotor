@@ -49,7 +49,7 @@ class ShoppingFragment : Fragment() {
         }
 
         productAdapter.itemClicked = {
-            setCart(it.id)
+            addCart(it.id)
         }
     }
 
@@ -97,9 +97,9 @@ class ShoppingFragment : Fragment() {
         }
     }
 
-    private fun setCart(productId: String) {
+    private fun addCart(productId: String) {
         viewModel.currentUserAuth
-        viewModel.setCart(productId).observe(viewLifecycleOwner) { resource ->
+        viewModel.addCart(productId).observe(viewLifecycleOwner) { resource ->
             when (resource) {
                 is Resource.Loading -> dialog.show()
                 is Resource.Success -> {
