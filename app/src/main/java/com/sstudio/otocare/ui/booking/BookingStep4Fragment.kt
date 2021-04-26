@@ -164,11 +164,11 @@ class BookingStep4Fragment : Fragment() {
     private fun setCal(): Int {
         try {
             val startMillis: Long = Calendar.getInstance().run {
-                set(2021, 3, 3, 3, 0)
+                set(2021, 3, 27, 3, 0)
                 timeInMillis
             }
             val endMillis: Long = Calendar.getInstance().run {
-                set(2021, 3, 3, 4, 45)
+                set(2021, 3, 27, 4, 45)
                 timeInMillis
             }
             val cr: ContentResolver = requireActivity().contentResolver

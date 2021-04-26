@@ -11,5 +11,6 @@ data class Booking(
     var pkg: Package = Package(),
     var garage: Garage = Garage(),
     var date: String = "",
-    var eventId: Int = 0
+    var eventId: Int = 0,
+    var cart: List<Cart> = listOf()
 ) : Parcelable

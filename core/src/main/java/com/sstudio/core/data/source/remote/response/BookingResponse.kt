@@ -1,5 +1,7 @@
 package com.sstudio.core.data.source.remote.response
 
+import com.sstudio.core.domain.model.Cart
+
 data class BookingResponse(
     var id: String = "",
     var userPhone: String = "",
@@ -14,5 +16,6 @@ data class BookingResponse(
     var packagePrice: Double = 0.0,
     var timeId: String = "",
     var timeStart: String = "",
-    var timeFinish: String = ""
+    var timeFinish: String = "",
+    var cart: List<Cart> = listOf()
 )

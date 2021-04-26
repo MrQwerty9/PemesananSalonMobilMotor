@@ -8,7 +8,9 @@ import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.recyclerview.widget.GridLayoutManager
 import com.sstudio.core.data.Resource
+import com.sstudio.core.domain.model.Cart
 import com.sstudio.core.domain.model.User
+import com.sstudio.otocare.MainActivity
 import com.sstudio.otocare.R
 import com.sstudio.otocare.databinding.ActivityCartBinding
 import com.sstudio.otocare.ui.booking.BookingActivity
@@ -24,6 +26,7 @@ class CartActivity : AppCompatActivity() {
     private lateinit var binding: ActivityCartBinding
     private val cartAdapter = CartAdapter()
     private var user: User? = null
+    private var cart: ArrayList<Cart> = arrayListOf()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -35,7 +38,7 @@ class CartActivity : AppCompatActivity() {
 
         dialog = SpotsDialog.Builder().setContext(this).setCancelable(false).build()
 
-        checkCurrentUser()
+        getCurrentUser()
         initView()
         getCart()
         checkActiveBooking()
@@ -46,6 +49,7 @@ class CartActivity : AppCompatActivity() {
             if (!alreadyBooking && user != null) {
                 val intent = Intent(this, BookingActivity::class.java)
                 intent.putExtra(BookingActivity.EXTRA_USER, user)
+                intent.putExtra(BookingActivity.EXTRA_CART, cart)
                 startActivity(intent)
             } else {
                 Toast.makeText(
@@ -112,21 +116,9 @@ class CartActivity : AppCompatActivity() {
         }
     }
 
-    private fun checkCurrentUser() {
-        viewModel.getUser?.observe(this) { resource ->
-            when (resource) {
-                is Resource.Loading -> dialog.show()
-                is Resource.Success -> {
-                    dialog.dismiss()
-                    resource.data?.let {
-                        user = it
-                    }
-                }
-                is Resource.Error -> {
-                    dialog.dismiss()
-//                        Toast.makeText(this, resource.message, Toast.LENGTH_SHORT).show()
-                }
-            }
+    private fun getCurrentUser() {
+        MainActivity.currentUser.observe(this) {
+            user = it
         }
     }
 
@@ -157,10 +149,10 @@ class CartActivity : AppCompatActivity() {
                     Log.d("mytag", "${resource.data}")
                     resource.data?.let {
                         if (it.isNotEmpty()) {
+                            cart = it as ArrayList<Cart>
                             binding.rvCart.adapter = cartAdapter
                             cartAdapter.setCart(it)
                         }
-
                     }
                 }
                 is Resource.Error -> {

@@ -63,7 +63,8 @@ object DataMapper {
             packagePrice = input.pkg.price,
             timeStart = input.timeSlot.timeStart,
             timeFinish = input.timeSlot.timeFinish,
-            timeId = input.timeSlot.id.toString()
+            timeId = input.timeSlot.id.toString(),
+            cart = input.cart
         )
 
     fun mapBookingResponseToDomain(input: BookingResponse): Booking =

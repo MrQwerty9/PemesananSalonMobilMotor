@@ -23,6 +23,7 @@
     <string name="choose_package">Pilih Paket</string>
     <string name="choose_location">Pilih Lokasi</string>
     <string name="cart">Keranjang</string>
+    <string name="please_login">Silahkan anda login terlebih dahulu</string>
 
 
 </resources>

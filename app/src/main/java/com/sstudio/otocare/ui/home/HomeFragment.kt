@@ -11,6 +11,7 @@ import android.widget.Toast
 import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.sstudio.core.data.Resource
+import com.sstudio.core.domain.model.Cart
 import com.sstudio.core.domain.model.User
 import com.sstudio.otocare.MainActivity
 import com.sstudio.otocare.R
@@ -34,6 +35,7 @@ class HomeFragment : Fragment() {
     private var currentUser: User? = null
     private var alreadyBooking = false
     private var activeBookingId = ""
+    private var cart: List<Cart> = listOf()
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -48,7 +50,7 @@ class HomeFragment : Fragment() {
         super.onViewCreated(view, savedInstanceState)
         Slider.init(PicassoImageLoadingServices())
 
-        setUserInformation()
+        getUserInformation()
         loadBanner()
         loadLookBook()
         loadBookingInformation()
@@ -57,10 +59,19 @@ class HomeFragment : Fragment() {
         dialog = SpotsDialog.Builder().setContext(requireContext()).setCancelable(false).build()
 
         binding.cvBooking.setOnClickListener {
-            if (!alreadyBooking && currentUser != null) {
+            if (!alreadyBooking && currentUser != null && cart.isNotEmpty()) {
+                val intent = Intent(activity, CartActivity::class.java)
+                startActivity(intent)
+            } else if (!alreadyBooking && currentUser != null) {
                 val intent = Intent(activity, BookingActivity::class.java)
                 intent.putExtra(BookingActivity.EXTRA_USER, currentUser)
                 startActivity(intent)
+            } else if (currentUser == null) {
+                Toast.makeText(
+                    requireContext(),
+                    getString(R.string.please_login),
+                    Toast.LENGTH_SHORT
+                ).show()
             } else {
                 Toast.makeText(
                     requireContext(),
@@ -71,8 +82,16 @@ class HomeFragment : Fragment() {
         }
 
         binding.cvCart.setOnClickListener {
-            val intent = Intent(activity, CartActivity::class.java)
-            startActivity(intent)
+            if (currentUser == null) {
+                Toast.makeText(
+                    requireContext(),
+                    getString(R.string.please_login),
+                    Toast.LENGTH_SHORT
+                ).show()
+            } else {
+                val intent = Intent(activity, CartActivity::class.java)
+                startActivity(intent)
+            }
         }
 
         binding.btnCancel.setOnClickListener {
@@ -183,6 +202,7 @@ class HomeFragment : Fragment() {
                 is Resource.Success -> {
                     resource.data?.let {
                         if (it.isNotEmpty()) {
+                            cart = it
                             binding.cartBadge.visibility = View.VISIBLE
                             if (it.size > 99)
                                 binding.cartBadge.text = "99"
@@ -201,7 +221,7 @@ class HomeFragment : Fragment() {
         }
     }
 
-    private fun setUserInformation() {
+    private fun getUserInformation() {
         MainActivity.currentUser.observe(viewLifecycleOwner) {
             binding.tvUserName.text = it.name
             currentUser = it

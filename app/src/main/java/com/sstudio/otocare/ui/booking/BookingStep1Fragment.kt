@@ -15,6 +15,7 @@ import androidx.navigation.Navigation
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.sstudio.core.data.Resource
 import com.sstudio.core.domain.model.Booking
+import com.sstudio.core.domain.model.Cart
 import com.sstudio.core.domain.model.User
 import com.sstudio.otocare.R
 import com.sstudio.otocare.databinding.FragmentBookingStepOneBinding
@@ -38,6 +39,7 @@ class BookingStep1Fragment : Fragment() {
     //    private var selectedSpinnerCity = 0
 //    private var selectedGaragePosition = -1
     private var currentUser: User? = null
+    private var cart: ArrayList<Cart>? = null
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -52,6 +54,7 @@ class BookingStep1Fragment : Fragment() {
         setToolbar()
         dialog = SpotsDialog.Builder().setContext(activity).setCancelable(false).build()
         currentUser = requireActivity().intent.getParcelableExtra(BookingActivity.EXTRA_USER)
+        cart = requireActivity().intent.getParcelableArrayListExtra(BookingActivity.EXTRA_CART)
         navController = Navigation.findNavController(view)
         initView()
         loadAllPackage()
@@ -100,6 +103,7 @@ class BookingStep1Fragment : Fragment() {
                 val action =
                     BookingStep1FragmentDirections.actionGotoStepTwo(
                         Booking(
+                            cart = cart ?: listOf(),
                             customer = currentUser!!,
                             pkg = packageAdapter.itemSelected!!
                         )

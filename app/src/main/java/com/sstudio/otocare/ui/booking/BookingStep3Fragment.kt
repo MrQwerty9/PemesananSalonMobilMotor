@@ -135,7 +135,8 @@ class BookingStep3Fragment : Fragment() {
                             garage = bookingBundle.garage,
                             pkg = bookingBundle.pkg,
                             timeSlot = timeSlotAdapter.itemSelected!!,
-                            date = viewModel.dateSelected.value ?: ""
+                            date = viewModel.dateSelected.value ?: "",
+                            cart = bookingBundle.cart
                         )
                     )
                 navController.navigate(action)

@@ -13,6 +13,7 @@ class BookingActivity : AppCompatActivity() {
 
     companion object {
         const val EXTRA_USER = "extra_user"
+        const val EXTRA_CART = "extra_cart"
     }
 
     lateinit var dialog: AlertDialog

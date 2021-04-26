@@ -73,7 +73,8 @@ class BookingStep2Fragment : Fragment() {
                         Booking(
                             customer = currentUser!!,
                             garage = garageAdapter.itemSelected!!,
-                            pkg = bookingBundle.pkg
+                            pkg = bookingBundle.pkg,
+                            cart = bookingBundle.cart
                         )
                     )
                 navController.navigate(action)
